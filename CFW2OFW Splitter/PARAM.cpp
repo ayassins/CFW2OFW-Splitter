@@ -1,7 +1,6 @@
 #include "PARAM.h"
 
 
-
 PARAM::PARAM(QString path)
 {
 	quint32 magic, version, key_table_start, data_table_start, tables_entries, data_len, data_max_len, data_offset;
@@ -17,6 +16,7 @@ PARAM::PARAM(QString path)
 		paramDict.insert(i, qMakePair(key_offset + key_table_start, qMakePair(data_offset + data_table_start, data_max_len)));
 	}
 }
+
 
 bool PARAM::setKeyValue(QByteArray key, QByteArray value)
 {
@@ -37,6 +37,7 @@ bool PARAM::setKeyValue(QByteArray key, QByteArray value)
 	return false;
 }
 
+
 QString PARAM::getKeyValue(QByteArray key)
 {
 	for (int i = 0; i < paramDict.count(); i++)
@@ -48,6 +49,7 @@ QString PARAM::getKeyValue(QByteArray key)
 	}
 	return QString();
 }
+
 
 PARAM::~PARAM()
 {
@@ -66,30 +68,37 @@ bool PARAM::Account_ID(QByteArray value)
 	return setKeyValue("ACCOUNT_ID", value);
 }
 
+
 QString PARAM::Analog_Mode()
 {
 	return getKeyValue("ANALOG_MODE");
 }
+
 
 bool PARAM::Analog_Mode(QByteArray value)
 {
 	return setKeyValue("ANALOG_MODE", value);
 }
 
+
 QString PARAM::App_Ver()
 {
 	return getKeyValue("APP_VER");
 }
+
 
 bool PARAM::App_Ver(QByteArray value)
 {
 	return setKeyValue("APP_VER", value);
 }
 
+
 QString PARAM::Category()
 {
 	return getKeyValue("CATEGORY");
 }
+
+
 bool PARAM::Category(QByteArray value)
 {
 	return setKeyValue("CATEGORY", value);
@@ -101,15 +110,19 @@ QString PARAM::Content_ID()
 	return getKeyValue("CONTENT_ID");
 }
 
+
 bool PARAM::Content_ID(QByteArray value)
 {
 	return setKeyValue("CONTENT_ID", value);
 }
 
+
 QString PARAM::Detail()
 {
 	return getKeyValue("DETAIL");
 }
+
+
 bool PARAM::Detail(QByteArray value)
 {
 	return setKeyValue("DETAIL", value);
@@ -121,95 +134,115 @@ QString PARAM::Gamedata_ID()
 	return getKeyValue("GAMEDATA_ID");
 }
 
+
 bool PARAM::Gamedata_ID(QByteArray value)
 {
 	return setKeyValue("GAMEDATA_ID", value);
 }
+
 
 QString PARAM::License()
 {
 	return getKeyValue("LICENSE");
 }
 
+
 bool PARAM::License(QByteArray value)
 {
 	return setKeyValue("LICENSE", value);
 }
+
 
 QString PARAM::NP_Communication_ID()
 {
 	return getKeyValue("NP_COMMUNICATION_ID");
 }
 
+
 bool PARAM::NP_Communication_ID(QByteArray value)
 {
 	return setKeyValue("NP_COMMUNICATION_ID", value);
 }
+
 
 QString PARAM::NPcommid()
 {
 	return getKeyValue("NPCOMMID");
 }
 
+
 bool PARAM::NPcommid(QByteArray value)
 {
 	return setKeyValue("NPCOMMID", value);
 }
+
 
 QString PARAM::PADDING()
 {
 	return getKeyValue("PADDING");
 }
 
+
 bool PARAM::PADDING(QByteArray value)
 {
 	return setKeyValue("PADDING", value);
 }
+
 
 QString PARAM::Params()
 {
 	return getKeyValue("PARAMS");
 }
 
+
 bool PARAM::Params(QByteArray value)
 {
 	return setKeyValue("PARAMS", value);
 }
+
 
 QString PARAM::Params2()
 {
 	return getKeyValue("PARAMS2");
 }
 
+
 bool PARAM::Params2(QByteArray value)
 {
 	return setKeyValue("PARAMS2", value);
 }
+
 
 QString PARAM::Patch_File()
 {
 	return getKeyValue("PATCH_FILE");
 }
 
+
 bool PARAM::Patch_File(QByteArray value)
 {
 	return setKeyValue("PATCH_FILE", value);
 }
+
 
 QString PARAM::Ps3_System_Ver()
 {
 	return getKeyValue("PS3_SYSTEM_VER");
 }
 
+
 bool PARAM::Ps3_System_Ver(QByteArray value)
 {
 	return setKeyValue("PS3_SYSTEM_VER", value);
 }
 
+
 QString PARAM::Savedata_detail()
 {
 	return getKeyValue("SAVEDATA_DETAIL");
 }
+
+
 bool PARAM::Savedata_detail(QByteArray value)
 {
 	return setKeyValue("SAVEDATA_DETAIL", value);
@@ -221,44 +254,54 @@ QString PARAM::Savedata_Directory()
 	return getKeyValue("SAVEDATA_DIRECTORY");
 }
 
+
 bool PARAM::Savedata_Directory(QByteArray value)
 {
 	return setKeyValue("SAVEDATA_DIRECTORY", value);
 }
+
 
 QString PARAM::Savedata_File_List()
 {
 	return getKeyValue("SAVEDATA_FILE_LIST");
 }
 
+
 bool PARAM::Savedata_File_List(QByteArray value)
 {
 	return setKeyValue("SAVEDATA_FILE_LIST", value);
 }
+
 
 QString PARAM::Savedata_List_Param()
 {
 	return getKeyValue("SAVEDATA_LIST_PARAM");
 }
 
+
 bool PARAM::Savedata_List_Param(QByteArray value)
 {
 	return setKeyValue("SAVEDATA_LIST_PARAM", value);
 }
 
+
 QString PARAM::Savedata_Params()
 {
 	return getKeyValue("SAVEDATA_PARAMS");
 }
+
+
 bool PARAM::Savedata_Params(QByteArray value)
 {
 	return setKeyValue("SAVEDATA_PARAMS", value);
 }
 
+
 QString PARAM::Savedata_Title()
 {
 	return getKeyValue("SAVEDATA_TITLE");
 }
+
 
 bool PARAM::Savedata_Title(QByteArray value)
 {
@@ -271,10 +314,12 @@ QString PARAM::Sub_Title()
 	return getKeyValue("SUB_TITLE");
 }
 
+
 bool PARAM::Sub_Title(QByteArray value)
 {
 	return setKeyValue("SUB_TITLE", value);
 }
+
 
 QString PARAM::Target_App_Ver()
 {
