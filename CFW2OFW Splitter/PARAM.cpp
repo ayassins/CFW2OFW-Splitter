@@ -27,11 +27,11 @@ bool PARAM::setKeyValue(QByteArray key, QByteArray value)
 		f.seek(paramDict[i].second.first);
 		if (value.size() <= paramDict[i].second.second)
 		{
-			QByteArray key_value;
-			key_value.fill(0, paramDict[i].second.second);
-			key_value.insert(0, value);
-			key_value.resize(paramDict[i].second.second);
-			return (f.write(key_value));
+			QByteArray k_value;
+			k_value.fill(0, paramDict[i].second.second);
+			k_value.insert(0, value);
+			k_value.resize(paramDict[i].second.second);
+			return (f.write(k_value));
 		}
 	}
 	return false;
