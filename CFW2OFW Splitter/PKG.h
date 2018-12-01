@@ -16,7 +16,6 @@ public:
 	bool Generate_Debug_Package();
 private:
 	QString gamedirpath;
-	QFile f;
 	QProcess proc;
 };
 
