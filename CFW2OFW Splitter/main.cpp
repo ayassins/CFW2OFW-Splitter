@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	//qDebug() << PARAM("c:\\param.sfo").Title("123");
-	PKG("C:\\1\\ExtractedPKG\\NPEB02252").Generate_Debug_Package();
+	PKG("C:\\BLES02252").Generate_Debug_Package();
 	//qDebug() << EBOOT("c:\\eboot.bin").ContentID() << endl;
 	//qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	//if (splitdir(argv[1], 4294705152))

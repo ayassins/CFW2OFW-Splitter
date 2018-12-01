@@ -6,6 +6,7 @@
 #include <QtCore/qdir.h>
 #include "PARAM.h"
 #include "EBOOT.h"
+#include <QtCore/qdebug>
 
 class PKG
 {

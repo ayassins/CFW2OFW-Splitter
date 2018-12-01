@@ -11,14 +11,21 @@ PKG::PKG(QString path)
 PKG::~PKG()
 {
 }
-
+String removeLastSlash(String url) {
+	if (url.endsWith("/")) {
+		return url.substring(0, url.lastIndexOf("/"));
+	}
+	else {
+		return url;
+	}
+}
 
 bool PKG::Generate_Debug_Package()
 {
-	QString name = "/home/admin/job0/Job";
-	int pos = name.lastIndexOf(QChar('/'));
-	qDebug() << name.left(pos);
-	QString Title_ID = gamedirpath.mid(gamedirpath.lastIndexOf("\\/"));
+	int pos = gamedirpath.lastIndexOf(QChar('\\')) + 1;
+	if (pos == -1)
+		return false;
+	QString Title_ID = gamedirpath.mid(pos);
 	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(gamedirpath + "\\PARAM.SFO");
 	if (!e.isValidEboot() && !p.isValidParam())
