@@ -4,6 +4,8 @@
 
 PKG::PKG(QString path)
 {
+	if (path.endsWith('\\'))
+		path.remove(path.size() - 1, 1);
 	gamedirpath = path;
 }
 
@@ -12,21 +14,10 @@ PKG::~PKG()
 {
 }
 
-QString removeLastSlash(QString url) {
-	if (url.endsWith("/")) {
-		return url.mid(url.lastIndexOf("/"));
-	}
-	else {
-		return url;
-	}
-}
 
 bool PKG::Generate_Debug_Package()
 {
-	int pos = gamedirpath.lastIndexOf(QChar('\\')) + 1;
-	if (pos == -1)
-		return false;
-	QString Title_ID = gamedirpath.mid(pos);
+	QString Title_ID = gamedirpath.mid(1 + gamedirpath.lastIndexOf(QChar('\\')));
 	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(gamedirpath + "\\PARAM.SFO");
 	if (!e.isValidEboot() && !p.isValidParam())
@@ -36,6 +27,7 @@ bool PKG::Generate_Debug_Package()
 	QString App_Ver = p.App_Ver();
 	QString Version = p.Version();
 	QString Pkg_Config_File = QDir::currentPath() + "\\bin\\package.conf";
+	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
 	QString Pkg_Name = Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + ".pkg";
 	f.setFileName(Pkg_Config_File);
 	if (!f.open(QIODevice::WriteOnly))
@@ -62,7 +54,14 @@ bool PKG::Generate_Debug_Package()
 	else
 		return false;
 	f.close();
-	proc.start("%s", QStringList() << "- n" << "- f");
-	proc.waitForFinished();
-	QDir().rename(Content_ID + ".pkg", Pkg_Name);
+	proc.setProcessChannelMode(QProcess::ForwardedChannels);
+	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << Pkg_Config_File << gamedirpath);
+	//if (!proc.waitForStarted())
+		//return false;
+	if (!proc.waitForFinished(-1))
+		qDebug() << "Make failed:";
+	else
+		qDebug() << "Make output:";
+	//QDir().rename(Content_ID + ".pkg", Pkg_Name);
+	return true;
 }
