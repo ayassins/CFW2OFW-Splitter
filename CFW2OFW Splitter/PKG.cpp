@@ -15,19 +15,18 @@ PKG::~PKG()
 
 bool PKG::Generate_Debug_Package()
 {
-	QString Category, App_Ver, Version, Content_ID, Title_ID, Pkg_Name, Pkg_Config;
-	Title_ID = gamedirpath.mid(gamedirpath.lastIndexOf("/"));
+	QString Title_ID = gamedirpath.mid(gamedirpath.lastIndexOf("/"));
 	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(gamedirpath + "\\PARAM.SFO");
 	if (!e.isValidEboot() && !p.isValidParam())
 		return false;
-	Content_ID = e.Content_ID();
-	Category = p.Category();
-	App_Ver = p.App_Ver();
-	Version = p.Version();
-	Pkg_Config = QDir::currentPath() + "bin\\package.conf";
-	Pkg_Name = Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + ".pkg";
-	f.setFileName(Pkg_Config);
+	QString Content_ID = e.Content_ID();
+	QString Category = p.Category();
+	QString App_Ver = p.App_Ver();
+	QString Version = p.Version();
+	QString Pkg_Config_File = QDir::currentPath() + "bin\\package.conf";
+	QString Pkg_Name = Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + ".pkg";
+	f.setFileName(Pkg_Config_File);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
 	QTextStream out(&f);
@@ -43,7 +42,7 @@ bool PKG::Generate_Debug_Package()
 	}
 	else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT")
 	{
-		p.Title_ID("");
+		p.Title_ID(Title_ID);
 		if (Category == "DG")
 			p.Category("HG");
 		out << "ContentType = GameExec" << endl

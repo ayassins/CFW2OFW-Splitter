@@ -43,7 +43,7 @@ bool PARAM::isValidVersion()
 }
 
 
-bool PARAM::setKeyValue(QByteArray key, QByteArray value)
+bool PARAM::setKeyValue(QString key, QString value)
 {
 	for (int i = 0; i < paramDict.count(); i++)
 	{
@@ -63,7 +63,7 @@ bool PARAM::setKeyValue(QByteArray key, QByteArray value)
 }
 
 
-QString PARAM::getKeyValue(QByteArray key)
+QString PARAM::getKeyValue(QString key)
 {
 	for (int i = 0; i < paramDict.count(); i++)
 	{
@@ -82,7 +82,7 @@ QString PARAM::Account_ID()
 }
 
 
-bool PARAM::Account_ID(QByteArray value)
+bool PARAM::Account_ID(QString value)
 {
 	return setKeyValue("ACCOUNT_ID", value);
 }
@@ -94,7 +94,7 @@ QString PARAM::Analog_Mode()
 }
 
 
-bool PARAM::Analog_Mode(QByteArray value)
+bool PARAM::Analog_Mode(QString value)
 {
 	return setKeyValue("ANALOG_MODE", value);
 }
@@ -106,7 +106,7 @@ QString PARAM::App_Ver()
 }
 
 
-bool PARAM::App_Ver(QByteArray value)
+bool PARAM::App_Ver(QString value)
 {
 	return setKeyValue("APP_VER", value);
 }
@@ -118,7 +118,7 @@ QString PARAM::Category()
 }
 
 
-bool PARAM::Category(QByteArray value)
+bool PARAM::Category(QString value)
 {
 	return setKeyValue("CATEGORY", value);
 }
@@ -130,7 +130,7 @@ QString PARAM::Content_ID()
 }
 
 
-bool PARAM::Content_ID(QByteArray value)
+bool PARAM::Content_ID(QString value)
 {
 	return setKeyValue("CONTENT_ID", value);
 }
@@ -142,7 +142,7 @@ QString PARAM::Detail()
 }
 
 
-bool PARAM::Detail(QByteArray value)
+bool PARAM::Detail(QString value)
 {
 	return setKeyValue("DETAIL", value);
 }
@@ -154,7 +154,7 @@ QString PARAM::Gamedata_ID()
 }
 
 
-bool PARAM::Gamedata_ID(QByteArray value)
+bool PARAM::Gamedata_ID(QString value)
 {
 	return setKeyValue("GAMEDATA_ID", value);
 }
@@ -166,7 +166,7 @@ QString PARAM::License()
 }
 
 
-bool PARAM::License(QByteArray value)
+bool PARAM::License(QString value)
 {
 	return setKeyValue("LICENSE", value);
 }
@@ -178,7 +178,7 @@ QString PARAM::NP_Communication_ID()
 }
 
 
-bool PARAM::NP_Communication_ID(QByteArray value)
+bool PARAM::NP_Communication_ID(QString value)
 {
 	return setKeyValue("NP_COMMUNICATION_ID", value);
 }
@@ -190,7 +190,7 @@ QString PARAM::NPcommid()
 }
 
 
-bool PARAM::NPcommid(QByteArray value)
+bool PARAM::NPcommid(QString value)
 {
 	return setKeyValue("NPCOMMID", value);
 }
@@ -202,7 +202,7 @@ QString PARAM::PADDING()
 }
 
 
-bool PARAM::PADDING(QByteArray value)
+bool PARAM::PADDING(QString value)
 {
 	return setKeyValue("PADDING", value);
 }
@@ -214,7 +214,7 @@ QString PARAM::Params()
 }
 
 
-bool PARAM::Params(QByteArray value)
+bool PARAM::Params(QString value)
 {
 	return setKeyValue("PARAMS", value);
 }
@@ -226,7 +226,7 @@ QString PARAM::Params2()
 }
 
 
-bool PARAM::Params2(QByteArray value)
+bool PARAM::Params2(QString value)
 {
 	return setKeyValue("PARAMS2", value);
 }
@@ -238,7 +238,7 @@ QString PARAM::Patch_File()
 }
 
 
-bool PARAM::Patch_File(QByteArray value)
+bool PARAM::Patch_File(QString value)
 {
 	return setKeyValue("PATCH_FILE", value);
 }
@@ -250,7 +250,7 @@ QString PARAM::Ps3_System_Ver()
 }
 
 
-bool PARAM::Ps3_System_Ver(QByteArray value)
+bool PARAM::Ps3_System_Ver(QString value)
 {
 	return setKeyValue("PS3_SYSTEM_VER", value);
 }
@@ -262,7 +262,7 @@ QString PARAM::Savedata_detail()
 }
 
 
-bool PARAM::Savedata_detail(QByteArray value)
+bool PARAM::Savedata_detail(QString value)
 {
 	return setKeyValue("SAVEDATA_DETAIL", value);
 }
@@ -274,7 +274,7 @@ QString PARAM::Savedata_Directory()
 }
 
 
-bool PARAM::Savedata_Directory(QByteArray value)
+bool PARAM::Savedata_Directory(QString value)
 {
 	return setKeyValue("SAVEDATA_DIRECTORY", value);
 }
@@ -286,7 +286,7 @@ QString PARAM::Savedata_File_List()
 }
 
 
-bool PARAM::Savedata_File_List(QByteArray value)
+bool PARAM::Savedata_File_List(QString value)
 {
 	return setKeyValue("SAVEDATA_FILE_LIST", value);
 }
@@ -298,7 +298,7 @@ QString PARAM::Savedata_List_Param()
 }
 
 
-bool PARAM::Savedata_List_Param(QByteArray value)
+bool PARAM::Savedata_List_Param(QString value)
 {
 	return setKeyValue("SAVEDATA_LIST_PARAM", value);
 }
@@ -310,7 +310,7 @@ QString PARAM::Savedata_Params()
 }
 
 
-bool PARAM::Savedata_Params(QByteArray value)
+bool PARAM::Savedata_Params(QString value)
 {
 	return setKeyValue("SAVEDATA_PARAMS", value);
 }
@@ -322,7 +322,7 @@ QString PARAM::Savedata_Title()
 }
 
 
-bool PARAM::Savedata_Title(QByteArray value)
+bool PARAM::Savedata_Title(QString value)
 {
 	return setKeyValue("SAVEDATA_TITLE", value);
 }
@@ -334,7 +334,7 @@ QString PARAM::Sub_Title()
 }
 
 
-bool PARAM::Sub_Title(QByteArray value)
+bool PARAM::Sub_Title(QString value)
 {
 	return setKeyValue("SUB_TITLE", value);
 }
@@ -346,7 +346,7 @@ QString PARAM::Target_App_Ver()
 }
 
 
-bool PARAM::Target_App_Ver(QByteArray value)
+bool PARAM::Target_App_Ver(QString value)
 {
 	return setKeyValue("TARGET_APP_VER", value);
 }
@@ -358,7 +358,7 @@ QString PARAM::Title()
 }
 
 
-bool PARAM::Title(QByteArray value)
+bool PARAM::Title(QString value)
 {
 	return setKeyValue("TITLE", value);
 }
@@ -370,7 +370,7 @@ QString PARAM::Title_ID()
 }
 
 
-bool PARAM::Title_ID(QByteArray value)
+bool PARAM::Title_ID(QString value)
 {
 	return setKeyValue("TITLE_ID", value);
 }
@@ -382,7 +382,7 @@ QString PARAM::Title_xx()
 }
 
 
-bool PARAM::Title_xx(QByteArray value)
+bool PARAM::Title_xx(QString value)
 {
 	return setKeyValue("TITLE_xx", value);
 }
@@ -394,7 +394,7 @@ QString PARAM::TitleID0xx()
 }
 
 
-bool PARAM::TitleID0xx(QByteArray value)
+bool PARAM::TitleID0xx(QString value)
 {
 	return setKeyValue("TITLEID0xx", value);
 }
@@ -406,7 +406,7 @@ QString PARAM::Version()
 }
 
 
-bool PARAM::Version(QByteArray value)
+bool PARAM::Version(QString value)
 {
 	return setKeyValue("VERSION", value);
 }
@@ -418,7 +418,7 @@ QString PARAM::Xmb_Apps()
 }
 
 
-bool PARAM::Xmb_Apps(QByteArray value)
+bool PARAM::Xmb_Apps(QString value)
 {
 	return setKeyValue("XMB_APPS", value);
 }
