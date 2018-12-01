@@ -28,7 +28,7 @@ bool PKG::Generate_Debug_Package()
 	Pkg_Config = QDir::currentPath() + "bin\\package.conf";
 	Pkg_Name = Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + ".pkg";
 	f.setFileName(Pkg_Config);
-	if (!f.open(QIODevice::WriteOnly,QIODevice::Truncate))
+	if (!f.open(QIODevice::WriteOnly))
 		return false;
 	QTextStream out(&f);
 	out << "ContentID = " << Content_ID << endl
@@ -54,4 +54,5 @@ bool PKG::Generate_Debug_Package()
 	f.close();
 	proc.start("%s", QStringList() << "- n" << "- f");
 	proc.waitForFinished();
+	QDir().rename(Content_ID + ".pkg", Pkg_Name);
 }
