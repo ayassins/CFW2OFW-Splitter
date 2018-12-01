@@ -17,5 +17,7 @@ public:
 private:
 	QString gamedirpath;
 	QProcess proc;
+	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
+	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
 };
 

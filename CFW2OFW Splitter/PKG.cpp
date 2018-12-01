@@ -12,6 +12,7 @@ PKG::PKG(QString path)
 
 PKG::~PKG()
 {
+	QDir().remove(package_conf);
 }
 
 
@@ -31,7 +32,6 @@ bool PKG::Generate_Debug_Package()
 		part_number = ".part" + Title_ID.mid(Title_ID.size() - 1);
 		Title_ID.remove(Title_ID.indexOf(QChar('_')), 2);
 	}
-	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
@@ -57,15 +57,11 @@ bool PKG::Generate_Debug_Package()
 		return false;
 	f.close();
 	proc.setProcessChannelMode(QProcess::ForwardedChannels);
-	proc.start(QDir::currentPath() + "\\bin\\psn_package_npdrm.exe", QStringList() << "-n" << "-f" << package_conf << gamedirpath);
+	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << gamedirpath);
 	if (!proc.waitForStarted())
 		return false;
 	if (!proc.waitForFinished(-1))
 		return false;
-	else 
-	{
-		QDir().rename(Content_ID + ".pkg", Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + part_number + ".pkg");
-		return true;
-	}
+	QDir().rename(Content_ID + ".pkg", Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + part_number + ".pkg");
 	return true;
 }
