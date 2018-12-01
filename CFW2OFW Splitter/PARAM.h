@@ -4,13 +4,13 @@
 #include <QtCore/qdatastream.h>
 #include <QtCore/qpair.h>
 #include <QtCore/qmap.h>
-#include <QtCore/qdebug.h>
 
 class PARAM
 {
 public:
 	PARAM(QString path);
 	~PARAM();
+	bool isValidParam();
 	QString Account_ID();
 	bool Account_ID(QByteArray value);
 	QString Analog_Mode();
@@ -71,7 +71,10 @@ public:
 	bool Xmb_Apps(QByteArray value);
 private:
 	QFile f;
+	quint32 magic, version;
 	QMap<int, QPair<int, QPair<int, int>>> paramDict;
+	bool isValidSignature();
+	bool isValidVersion();
 	bool setKeyValue(QByteArray key, QByteArray value);
 	QString getKeyValue(QByteArray key);
 };

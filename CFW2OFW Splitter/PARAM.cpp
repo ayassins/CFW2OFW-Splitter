@@ -3,18 +3,43 @@
 
 PARAM::PARAM(QString path)
 {
-	quint32 magic, version, key_table_start, data_table_start, tables_entries, data_len, data_max_len, data_offset;
+	quint32 key_table_start, data_table_start, tables_entries, data_len, data_max_len, data_offset;
 	quint16 key_offset, data_fmt;
 	f.setFileName(path);
 	f.open(QFile::ReadWrite);
 	QDataStream in(&f);
+	in >> magic >> version;
 	in.setByteOrder(QDataStream::LittleEndian);
-	in >> magic >> version >> key_table_start >> data_table_start >> tables_entries;
+	in >> key_table_start >> data_table_start >> tables_entries;
 	for (int i = 0; i < tables_entries; i++)
 	{
 		in >> key_offset >> data_fmt >> data_len >> data_max_len >> data_offset;
 		paramDict.insert(i, qMakePair(key_offset + key_table_start, qMakePair(data_offset + data_table_start, data_max_len)));
 	}
+}
+
+
+PARAM::~PARAM()
+{
+	f.close();
+}
+
+
+bool PARAM::isValidParam()
+{
+	return (isValidSignature() && isValidVersion());
+}
+
+
+bool PARAM::isValidSignature()
+{
+	return magic == 0x00505346;
+}
+
+
+bool PARAM::isValidVersion()
+{
+	return version == 0x01010000;
 }
 
 
@@ -48,12 +73,6 @@ QString PARAM::getKeyValue(QByteArray key)
 		return f.read(paramDict[i].second.second);
 	}
 	return QString();
-}
-
-
-PARAM::~PARAM()
-{
-	f.close();
 }
 
 

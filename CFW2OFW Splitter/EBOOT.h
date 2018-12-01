@@ -1,12 +1,17 @@
 #pragma once
 #include <QtCore/qfile.h>
+#include <QtCore/qdatastream.h>
 
 class EBOOT
 {
 public:
 	EBOOT(QString path);
 	~EBOOT();
-	QString ContentID();
+	bool isValidEboot();
+	QString Content_ID();
 private:
 	QFile f;
+	quint32 magic, header_version;
+	bool isValidSignature();
+	bool isValidVersion();
 };
