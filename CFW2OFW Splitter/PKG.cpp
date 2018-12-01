@@ -11,9 +11,10 @@ PKG::PKG(QString path)
 PKG::~PKG()
 {
 }
-String removeLastSlash(String url) {
+
+QString removeLastSlash(QString url) {
 	if (url.endsWith("/")) {
-		return url.substring(0, url.lastIndexOf("/"));
+		return url.mid(url.lastIndexOf("/"));
 	}
 	else {
 		return url;
