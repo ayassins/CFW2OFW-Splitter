@@ -15,7 +15,10 @@ PKG::~PKG()
 
 bool PKG::Generate_Debug_Package()
 {
-	QString Title_ID = gamedirpath.mid(gamedirpath.lastIndexOf("/"));
+	QString name = "/home/admin/job0/Job";
+	int pos = name.lastIndexOf(QChar('/'));
+	qDebug() << name.left(pos);
+	QString Title_ID = gamedirpath.mid(gamedirpath.lastIndexOf("\\/"));
 	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(gamedirpath + "\\PARAM.SFO");
 	if (!e.isValidEboot() && !p.isValidParam())
@@ -24,7 +27,7 @@ bool PKG::Generate_Debug_Package()
 	QString Category = p.Category();
 	QString App_Ver = p.App_Ver();
 	QString Version = p.Version();
-	QString Pkg_Config_File = QDir::currentPath() + "bin\\package.conf";
+	QString Pkg_Config_File = QDir::currentPath() + "\\bin\\package.conf";
 	QString Pkg_Name = Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + ".pkg";
 	f.setFileName(Pkg_Config_File);
 	if (!f.open(QIODevice::WriteOnly))
@@ -34,7 +37,7 @@ bool PKG::Generate_Debug_Package()
 		<< "Klicensee = 0x00000000000000000000000000000000" << endl
 		<< "DRMType = Free" << endl
 		<< "InstallDirectory = " << Title_ID << endl
-		<< "PackageVersion = " << Version  << endl;
+		<< "PackageVersion = " << Version.insert(2,".")  << endl;
 	if (Category == "GD")
 	{
 		out << "ContentType = GameData" << endl

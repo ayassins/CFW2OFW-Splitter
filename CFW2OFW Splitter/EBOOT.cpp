@@ -38,6 +38,7 @@ QString EBOOT::Content_ID()
 	in >> magic >> header_version;
 	in.skipRawData(0x448);
 	QByteArray ContentID;
+	ContentID.resize(0x24);
 	in.readRawData(ContentID.data(),0x24);
 	if (ContentID.contains("PATCH"))
 		ContentID.replace(ContentID.indexOf("PATCH"), 0x5, "GAME0");
