@@ -27,9 +27,9 @@ bool PKG::Generate_Debug_Package()
 	QString Category = p.Category();
 	QString App_Ver = p.App_Ver();
 	QString Version = p.Version();
-	QString part_number;
+	QString package_part_number;
 	if (Title_ID.contains(QChar('_'))) {
-		part_number = ".part" + Title_ID.mid(Title_ID.size() - 1);
+		package_part_number = ".part" + Title_ID.mid(Title_ID.size() - 1);
 		Title_ID.remove(Title_ID.indexOf(QChar('_')), 2);
 	}
 	QFile f(package_conf);
@@ -45,8 +45,7 @@ bool PKG::Generate_Debug_Package()
 		out << "ContentType = GameData" << endl
 			<< "PackageType = DiscGamePatch" << endl;
 	}
-	else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT")
-	{
+	else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT") {
 		p.Title_ID(Title_ID);
 		if (Category == "DG")
 			p.Category("HG");
@@ -62,6 +61,7 @@ bool PKG::Generate_Debug_Package()
 		return false;
 	if (!proc.waitForFinished(-1))
 		return false;
-	QDir().rename(Content_ID + ".pkg", Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + part_number + ".pkg");
+	if (!QDir().rename(Content_ID + ".pkg", Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg"))
+		return false;
 	return true;
 }
