@@ -11,12 +11,17 @@
 class PKG
 {
 public:
-	PKG(QString path);
+	enum PkgType {
+		Debug ,
+		Han ,
+	};
+	PKG(QString path, PkgType type = Debug);
 	~PKG();
-	bool Generate_Debug_Package();
+	bool Generate_Package();
 private:
 	QString gamedirpath;
 	QProcess proc;
+	PkgType pkgtype;
 	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
 	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
 };

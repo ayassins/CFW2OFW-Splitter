@@ -2,11 +2,12 @@
 
 
 
-PKG::PKG(QString path)
+PKG::PKG(QString path, PkgType type)
 {
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
 	gamedirpath = path;
+	pkgtype = type;
 }
 
 
@@ -16,7 +17,7 @@ PKG::~PKG()
 }
 
 
-bool PKG::Generate_Debug_Package()
+bool PKG::Generate_Package()
 {
 	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(gamedirpath + "\\PARAM.SFO");
@@ -63,5 +64,13 @@ bool PKG::Generate_Debug_Package()
 		return false;
 	if (!QDir().rename(Content_ID + ".pkg", Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg"))
 		return false;
+	if (pkgtype == Han)
+	{
+		proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << gamedirpath);
+		if (!proc.waitForStarted())
+			return false;
+		if (!proc.waitForFinished(-1))
+			return false;
+	}
 	return true;
 }
