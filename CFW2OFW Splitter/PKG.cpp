@@ -2,7 +2,7 @@
 
 
 
-PKG::PKG(QString path, PkgType type) : pkgtype(type), gamedirpath(path)
+PKG::PKG(QString path, PkgType type) : gamedirpath(path), pkgtype(type)
 {	
 }
 
