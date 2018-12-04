@@ -2,7 +2,7 @@
 
 
 
-PKG::PKG(QString path, PkgType type) : gamedirpath(path), pkgtype(type)
+PKG::PKG(QString path, PkgType type) : path(path), pkgtype(type)
 {	
 }
 
@@ -15,13 +15,13 @@ PKG::~PKG()
 
 bool PKG::Generate_Package()
 {
-	if (gamedirpath.endsWith('\\'))
-		gamedirpath.remove(gamedirpath.size() - 1, 1);
-	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
-	PARAM p(gamedirpath + "\\PARAM.SFO");
+	if (path.endsWith('\\'))
+		path.remove(path.size() - 1, 1);
+	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");
+	PARAM p(path + "\\PARAM.SFO");
 	if (!e.isValidEboot() && !p.isValidParam())
 		return false;
-	QString Title_ID = gamedirpath.mid(1 + gamedirpath.lastIndexOf(QChar('\\')));
+	QString Title_ID = path.mid(1 + path.lastIndexOf(QChar('\\')));
 	QString Content_ID = e.Content_ID();
 	QString Category = p.Category();
 	QString App_Ver = p.App_Ver();

@@ -19,7 +19,7 @@ public:
 	~PKG();
 	bool Generate_Package();
 private:
-	QString gamedirpath;
+	QString path;
 	QProcess proc;
 	PkgType pkgtype;
 	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
