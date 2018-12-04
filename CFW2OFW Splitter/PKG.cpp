@@ -2,12 +2,11 @@
 
 
 
-PKG::PKG(QString path, PkgType type)
+PKG::PKG(QString path, PkgType type) : pkgtype(type)
 {
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
 	gamedirpath = path;
-	pkgtype = type;
 }
 
 
@@ -62,11 +61,12 @@ bool PKG::Generate_Package()
 		return false;
 	if (!proc.waitForFinished(-1))
 		return false;
-	if (!QDir().rename(Content_ID + ".pkg", Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg"))
+	QString pkg_name = QDir::currentPath() + "\\"+ Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
+	if (!QDir().rename(QDir::currentPath() + "\\" + Content_ID + ".pkg", pkg_name))
 		return false;
 	if (pkgtype == Han)
 	{
-		proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << gamedirpath);
+		proc.start(ps3xploit_rifgen_edatresign, QStringList() << pkg_name);
 		if (!proc.waitForStarted())
 			return false;
 		if (!proc.waitForFinished(-1))
