@@ -2,11 +2,8 @@
 
 
 
-PKG::PKG(QString path, PkgType type) : pkgtype(type)
-{
-	if (path.endsWith('\\'))
-		path.remove(path.size() - 1, 1);
-	gamedirpath = path;
+PKG::PKG(QString path, PkgType type) : pkgtype(type), gamedirpath(path)
+{	
 }
 
 
@@ -18,6 +15,8 @@ PKG::~PKG()
 
 bool PKG::Generate_Package()
 {
+	if (gamedirpath.endsWith('\\'))
+		gamedirpath.remove(gamedirpath.size() - 1, 1);
 	EBOOT e(gamedirpath + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(gamedirpath + "\\PARAM.SFO");
 	if (!e.isValidEboot() && !p.isValidParam())
