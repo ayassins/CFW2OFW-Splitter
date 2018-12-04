@@ -74,6 +74,8 @@ bool PKG::Generate_Package()
 			return false;
 		if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 			return false;
+		if (!QDir().remove(pkg_name))
+			return false;
 	}
 	return true;
 }
