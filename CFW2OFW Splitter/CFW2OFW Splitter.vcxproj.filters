@@ -11,6 +11,9 @@
     <ClCompile Include="PKG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DIRSPLIT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -37,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PKG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DIRSPLIT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
