@@ -41,11 +41,12 @@ bool DIRSPLIT::split()
 			part_number++;
 		}
 		QString DestPath = path + QString("_") + QString::number(part_number);
-		QDir().mkpath(DestPath + f.fileInfo().absolutePath().remove(0, path.length()));
-		for each (QString templatefile in templatefiles) {
-			QFile::copy(templatefile, DestPath + templatefile.remove(0, path.length()));
+		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
+		for each (const QString &templatefile in templatefiles) {
+			QDir().mkpath(DestPath + templatefile.mid(0, templatefile.lastIndexOf('\\')));
+			QFile::copy(templatefile, DestPath + templatefile.mid(path.length()));
 		}
-		if (!QFile::rename(f.filePath(), DestPath + f.filePath().remove(0, path.length())))
+		if (!QFile::rename(f.filePath(), DestPath + f.filePath().mid(path.length())))
 			return false;
 	}
 	if (!QDir(path).removeRecursively())
