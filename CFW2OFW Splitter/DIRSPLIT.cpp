@@ -43,7 +43,7 @@ bool DIRSPLIT::split()
 		QString DestPath = path + QString("_") + QString::number(part_number);
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().remove(0, path.length()));
 		for each (QString templatefile in templatefiles) {
-			QFile::copy(templatefile, DestPath + templatefile.remove(0, templatefile.length()));
+			QFile::copy(templatefile, DestPath + templatefile.remove(0, path.length()));
 		}
 		if (!QFile::rename(f.filePath(), DestPath + f.filePath().remove(0, path.length())))
 			return false;
