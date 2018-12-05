@@ -8,6 +8,7 @@
 #include "EBOOT.h"
 #include "param.h"
 #include "PKG.h"
+#include "DIRSPLIT.h"
 
 
 
@@ -15,15 +16,12 @@
 int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
-	//qDebug() << PARAM("c:\\param.sfo").Title("123");
 	//qDebug() << PKG("C:\\1\\ExtractedPKG\\NPEB0225_9\\",PKG::Han).Generate_Package();
-	q();
-	//qDebug() << EBOOT("c:\\eboot.bin").ContentID() << endl;
 	//qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
-	//if (splitdir(argv[1], 4294705152))
-	//	qDebug() << "        Sucess!" << endl;
-	//else
-	//	qDebug() << "        Fail!" << endl;
+	if (DIRSPLIT(argv[1], QStringList() << "param.sfo" << "pic.jbeg").split())
+		qDebug() << "        Sucess!" << endl;
+	else
+		qDebug() << "        Fail!" << endl;
 	qDebug() << "Press any key to continue . . .";
 	getchar();
 	return FALSE;
