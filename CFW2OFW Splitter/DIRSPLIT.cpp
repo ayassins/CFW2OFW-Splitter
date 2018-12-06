@@ -15,10 +15,12 @@ DIRSPLIT::~DIRSPLIT()
 bool DIRSPLIT::split()
 {
 	int part_number = 1;
-	qint64 leftSpace = size;
 	for each (const QString &templatefile in templatefiles) {
-		leftSpace -= QFile(templatefile).size();
+		qDebug() <<"0"<< templatefile;
+		size -= QFile(templatefile).size();
 	}
+	qint64 leftSpace = size;
+	qDebug() << "1" <<leftSpace;
 	QDirIterator chk_f(path, QDir::Files, QDirIterator::Subdirectories);
 	if (!chk_f.hasNext())
 		return false;
@@ -34,18 +36,20 @@ bool DIRSPLIT::split()
 			leftSpace -= f.fileInfo().size();
 		else
 		{
-			for each (const QString &templatefile in templatefiles) {
-				leftSpace -= QFile(templatefile).size();
-			}
+			leftSpace = size;
 			leftSpace -= f.fileInfo().size();
 			part_number++;
 		}
 		QString DestPath = path + QString("_") + QString::number(part_number);
+		qDebug() <<"2" <<DestPath + f.fileInfo().absolutePath().mid(path.length());
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
 		for each (const QString &templatefile in templatefiles) {
-			QDir().mkpath(DestPath + templatefile.left(templatefile.lastIndexOf('\\')));
+			qDebug() <<"3"<< DestPath + templatefile.mid(path.length(), templatefile.size() - templatefile.lastIndexOf('\\'));
+			QDir().mkpath(DestPath + templatefile.mid(path.length(), templatefile.size() - templatefile.lastIndexOf('\\')));
+			qDebug() <<"4" <<DestPath + templatefile.mid(path.length());
 			QFile::copy(templatefile, DestPath + templatefile.mid(path.length()));
 		}
+		qDebug() <<"5" <<DestPath + f.filePath().mid(path.length());
 		if (!QFile::rename(f.filePath(), DestPath + f.filePath().mid(path.length())))
 			return false;
 	}
