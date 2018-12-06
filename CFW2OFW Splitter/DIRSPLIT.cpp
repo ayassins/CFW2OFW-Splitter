@@ -44,8 +44,8 @@ bool DIRSPLIT::split()
 		qDebug() <<"2" <<DestPath + f.fileInfo().absolutePath().mid(path.length());
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
 		for each (const QString &templatefile in templatefiles) {
-			qDebug() <<"3"<< DestPath + templatefile.mid(path.length(), templatefile.size() - templatefile.lastIndexOf(QChar('\\')));
-			QDir().mkpath(DestPath + templatefile.mid(path.length(), templatefile.size() - templatefile.lastIndexOf(QChar('\\'))));
+			qDebug() << "3" << DestPath + templatefile.left(templatefile.lastIndexOf('\\')).mid(path.length());
+			QDir().mkpath(DestPath + templatefile.left(templatefile.lastIndexOf('\\')).mid(path.length()));
 			qDebug() <<"4" <<DestPath + templatefile.mid(path.length());
 			QFile::copy(templatefile, DestPath + templatefile.mid(path.length()));
 		}
