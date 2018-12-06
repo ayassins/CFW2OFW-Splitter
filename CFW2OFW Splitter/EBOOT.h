@@ -5,7 +5,7 @@
 class EBOOT
 {
 public:
-	EBOOT(QString path);
+	EBOOT(const QString & path);
 	~EBOOT();
 	bool isValidEboot();
 	QString Content_ID();

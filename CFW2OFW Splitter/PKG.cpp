@@ -2,7 +2,7 @@
 
 
 
-PKG::PKG(QString path, PkgType type) : path(path), pkgtype(type)
+PKG::PKG(const QString &path, PkgType type) : path(path), pkgtype(type)
 {	
 }
 
@@ -28,7 +28,7 @@ bool PKG::Generate_Package()
 	QString Version = p.Version();
 	QString package_part_number;
 	if (Title_ID.contains(QChar('_'))) {
-		package_part_number = ".part" + Title_ID.mid(Title_ID.size() - 1);
+		package_part_number = ".part" + Title_ID.right(1);
 		Title_ID.remove(Title_ID.indexOf(QChar('_')), 2);
 	}
 	QFile f(package_conf);
@@ -55,7 +55,7 @@ bool PKG::Generate_Package()
 		return false;
 	f.close();
 	proc.setProcessChannelMode(QProcess::ForwardedChannels);
-	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << gamedirpath);
+	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << path);
 	if (!proc.waitForStarted())
 		return false;
 	if (!proc.waitForFinished(-1))

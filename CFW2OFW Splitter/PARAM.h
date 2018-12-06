@@ -8,7 +8,7 @@
 class PARAM
 {
 public:
-	PARAM(QString path);
+	PARAM(const QString & path);
 	~PARAM();
 	bool isValidParam();
 	QString Account_ID();

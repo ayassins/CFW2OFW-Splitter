@@ -2,7 +2,7 @@
 
 
 
-DIRSPLIT::DIRSPLIT(QString path, const QStringList &templatefiles, qint64 size) : path(path), templatefiles(templatefiles), size(size)
+DIRSPLIT::DIRSPLIT(const QString &path, const QStringList &templatefiles, qint64 size) : path(path), templatefiles(templatefiles), size(size)
 {
 }
 
@@ -43,7 +43,7 @@ bool DIRSPLIT::split()
 		QString DestPath = path + QString("_") + QString::number(part_number);
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
 		for each (const QString &templatefile in templatefiles) {
-			QDir().mkpath(DestPath + templatefile.mid(0, templatefile.lastIndexOf('\\')));
+			QDir().mkpath(DestPath + templatefile.left(templatefile.lastIndexOf('\\')));
 			QFile::copy(templatefile, DestPath + templatefile.mid(path.length()));
 		}
 		if (!QFile::rename(f.filePath(), DestPath + f.filePath().mid(path.length())))

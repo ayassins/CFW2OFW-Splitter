@@ -1,7 +1,7 @@
 #include "PARAM.h"
 
 
-PARAM::PARAM(QString path)
+PARAM::PARAM(const QString &path)
 {
 	quint32 key_table_start, data_table_start, tables_entries, data_len, data_max_len, data_offset;
 	quint16 key_offset, data_fmt;

@@ -15,7 +15,7 @@ public:
 		Debug ,
 		Han ,
 	};
-	PKG(QString path, PkgType type = Debug);
+	PKG(const QString &path, PkgType type = Debug);
 	~PKG();
 	bool Generate_Package();
 private:

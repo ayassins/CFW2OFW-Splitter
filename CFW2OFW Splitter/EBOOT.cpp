@@ -1,7 +1,7 @@
 #include "EBOOT.h"
 
 
-EBOOT::EBOOT(QString path)
+EBOOT::EBOOT(const QString &path)
 {
 	f.setFileName(path);
 	f.open(QIODevice::ReadOnly);
