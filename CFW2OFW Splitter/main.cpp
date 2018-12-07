@@ -18,10 +18,11 @@ int main(int argc, char *argv[])
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	QStringList splitteddirectorys;
-	if (DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN").split(splitteddirectorys))
-		for each (QString splitteddirectory in splitteddirectorys) {
-			PKG(splitteddirectory).Generate_Package();
-		}
+	DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN").split(splitteddirectorys);
+	for each (const QString &splitteddirectory in splitteddirectorys) {
+		qDebug() << splitteddirectory << "jhjhjhj";
+		PKG(splitteddirectory).Generate_Package();
+	}
 	qDebug() << "Press any key to continue . . ."; getchar();
 	return FALSE;
 }
