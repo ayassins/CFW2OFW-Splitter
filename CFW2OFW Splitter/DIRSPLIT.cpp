@@ -12,9 +12,8 @@ DIRSPLIT::~DIRSPLIT()
 }
 
 
-bool DIRSPLIT::split()
+bool DIRSPLIT::split(QStringList &splitteddirectorys)
 {
-	int part_number = 1;
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + '\\' + templatefile).size();
 	}
@@ -27,6 +26,8 @@ bool DIRSPLIT::split()
 		if (chk_f.fileInfo().size() > size)
 			return false;
 	}
+	int part_number = 1;
+	splitteddirectorys << path + QString('_') + QString::number(part_number);
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 	while (f.hasNext()) {
 		f.next();
@@ -37,6 +38,7 @@ bool DIRSPLIT::split()
 			leftSpace = size;
 			leftSpace -= f.fileInfo().size();
 			part_number++;
+			splitteddirectorys << path + QString('_') + QString::number(part_number);
 		}
 		QString DestPath = path + QString('_') + QString::number(part_number);
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
