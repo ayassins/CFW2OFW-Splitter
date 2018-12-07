@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	//qDebug() << PKG("C:\\1\\ExtractedPKG\\NPEB0225_9\\",PKG::Han).Generate_Package();
-	DIRSPLIT(QCoreApplication::applicationDirPath() + "\\NPEB0225", QStringList() << "PARAM.SFO" << "ICON0.PNG"<<"USRDIR\\EBOOT.BIN").split();
+	DIRSPLIT(QCoreApplication::applicationDirPath() + "\\NPEB0225", QStringList() << "\\PARAM.SFO" << "\\ICON0.PNG"<<"\\USRDIR\\EBOOT.BIN").split();
 	//qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	//if (DIRSPLIT(argv[1], QStringList() << "param.sfo" << "pic.jbeg").split())
 		//qDebug() << "        Sucess!" << endl;

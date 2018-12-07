@@ -62,8 +62,8 @@ bool PKG::Generate_Package()
 		return false;
 	if (!proc.exitCode() && !proc.exitStatus())
 		return false;
-	QString pkg_name = QDir::currentPath() + "\\"+ Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
-	if (!QDir().rename(QDir::currentPath() + "\\" + Content_ID + ".pkg", pkg_name))
+	QString pkg_name = QDir::currentPath() + '\\'+ Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
+	if (!QDir().rename(QDir::currentPath() + '\\' + Content_ID + ".pkg", pkg_name))
 		return false;
 	if (pkgtype == Han)
 	{
