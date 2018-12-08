@@ -12,6 +12,7 @@ public:
 	DIRSPLIT(const QString &path, qint64 size = 4294705152, const QStringList &templatefiles = QStringList());
 	~DIRSPLIT();
 	bool split(QStringList & splitteddirectorylist = QStringList());
+	bool canSplit();
 private:
 	QString path;
 	qint64 size;

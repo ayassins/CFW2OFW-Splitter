@@ -12,20 +12,30 @@ DIRSPLIT::~DIRSPLIT()
 }
 
 
+bool DIRSPLIT::canSplit()
+{
+	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
+	qint64 totalsize;
+	while (f.hasNext()) {
+		f.next();
+		if (f.fileInfo().size() > size)
+			return false;
+		totalsize += f.fileInfo().size();
+		if (totalsize > size)
+			return true;
+	}
+	return false;
+}
+
+
 bool DIRSPLIT::split(QStringList &splitteddirectorylist)
 {
+	if (!canSplit())
+		return false;
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + '\\' + templatefile).size();
 	}
 	qint64 leftSpace = size;
-	QDirIterator chk_f(path, QDir::Files, QDirIterator::Subdirectories);
-	if (!chk_f.hasNext())
-		return false;
-	while (chk_f.hasNext()) {
-		chk_f.next();
-		if (chk_f.fileInfo().size() > size)
-			return false;
-	}
 	int part_number = 1;
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 	while (f.hasNext()) {
@@ -55,3 +65,5 @@ bool DIRSPLIT::split(QStringList &splitteddirectorylist)
 		return false;
 	return true;
 }
+
+
