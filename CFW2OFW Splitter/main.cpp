@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	else {
-		PKG(argv[1]).Generate_Package();
+		qDebug() << PKG(argv[1]).Generate_Package();
 	}
 	qDebug() << "Press any key to continue . . ."; getchar();
 	return FALSE;
