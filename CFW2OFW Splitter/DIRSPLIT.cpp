@@ -28,7 +28,7 @@ bool DIRSPLIT::canSplit()
 }
 
 
-bool DIRSPLIT::split(QStringList &splitteddirectorylist)
+bool DIRSPLIT::split()
 {
 	if (!canSplit())
 		return false;
@@ -67,3 +67,7 @@ bool DIRSPLIT::split(QStringList &splitteddirectorylist)
 }
 
 
+QStringList &DIRSPLIT::entryList()
+{
+	return splitteddirectorylist;
+}

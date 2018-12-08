@@ -15,8 +15,10 @@ int main(int argc, char *argv[])
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	QStringList splitdirs;
-	if (DIRSPLIT(argv[1], 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN").split(splitdirs)) {
-		for each (const QString &dir in splitdirs) {
+	DIRSPLIT ds(argv[1], 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN");
+	if(ds.split())
+	{
+		for each (const QString &dir in ds.entryList()) {
 			qDebug() << dir << endl;
 			PKG(dir).Generate_Package();
 		}
