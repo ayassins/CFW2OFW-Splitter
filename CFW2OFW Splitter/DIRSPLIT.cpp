@@ -15,7 +15,7 @@ DIRSPLIT::~DIRSPLIT()
 bool DIRSPLIT::canSplit()
 {
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
-	qint64 totalsize;
+	qint64 totalsize = 0;
 	while (f.hasNext()) {
 		f.next();
 		if (f.fileInfo().size() > size)
