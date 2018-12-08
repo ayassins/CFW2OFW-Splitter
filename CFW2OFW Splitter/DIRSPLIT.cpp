@@ -2,7 +2,7 @@
 
 
 
-DIRSPLIT::DIRSPLIT(const QString &path, const QStringList &templatefiles, qint64 size) : path(path), templatefiles(templatefiles), size(size)
+DIRSPLIT::DIRSPLIT(const QString &path, qint64 size, const QStringList &templatefiles) : path(path), templatefiles(templatefiles), size(size)
 {
 }
 
@@ -12,7 +12,7 @@ DIRSPLIT::~DIRSPLIT()
 }
 
 
-bool DIRSPLIT::split(QStringList &splitteddirectorys)
+bool DIRSPLIT::split(QStringList &splitteddirectorylist)
 {
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + '\\' + templatefile).size();
@@ -27,7 +27,6 @@ bool DIRSPLIT::split(QStringList &splitteddirectorys)
 			return false;
 	}
 	int part_number = 1;
-	splitteddirectorys << path + QString('_') + QString::number(part_number);
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 	while (f.hasNext()) {
 		f.next();
@@ -38,9 +37,10 @@ bool DIRSPLIT::split(QStringList &splitteddirectorys)
 			leftSpace = size;
 			leftSpace -= f.fileInfo().size();
 			part_number++;
-			splitteddirectorys << path + QString('_') + QString::number(part_number);
 		}
 		QString DestPath = path + QString('_') + QString::number(part_number);
+		if (!splitteddirectorylist.contains(DestPath))
+			splitteddirectorylist << DestPath;
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
 		for each (const QString &templatefile in templatefiles) {
 			if(templatefile.contains('\\'))
@@ -53,5 +53,5 @@ bool DIRSPLIT::split(QStringList &splitteddirectorys)
 	}
 	if (!QDir(path).removeRecursively())
 		return false;
-	return false;
+	return true;
 }
