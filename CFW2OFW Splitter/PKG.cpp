@@ -60,7 +60,7 @@ bool PKG::Generate_Package()
 		return false;
 	if (!proc.waitForFinished(-1))
 		return false;
-	if (!proc.exitCode() && !proc.exitStatus())
+	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
 	QString pkg_name = QDir::currentPath() + '\\'+ Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
 	if (!QDir().rename(QDir::currentPath() + '\\' + Content_ID + ".pkg", pkg_name))
@@ -72,7 +72,7 @@ bool PKG::Generate_Package()
 			return false;
 		if (!proc.waitForFinished(-1))
 			return false;
-		if (!proc.exitCode() && !proc.exitStatus())
+		if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 			return false;
 		if (!QDir().remove(pkg_name))
 			return false;
