@@ -7,23 +7,36 @@
 #include "pkg.h"
 #include "dirsplit.h"
 
-
-
-
-int main(int argc, char *argv[])
+bool splitandcreatepkg(QString path)
 {
-	QCoreApplication a(argc, argv);
-	qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
-	DIRSPLIT ds(argv[1], 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN");
-	if(ds.split()) {
+	DIRSPLIT ds(path, 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN");
+	if (ds.split()) {
 		for each (const QString &d in ds.entryList()) {
 			qDebug() << d << endl;
 			PKG(d).Generate_Package();
 		}
 	}
 	else {
-		PKG(argv[1]).Generate_Package();
+		PKG(path).Generate_Package();
 	}
+}
+
+
+int main(int argc, char *argv[])
+{
+	QCoreApplication a(argc, argv);
+	qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
+	if (argc > 0)
+		splitandcreatepkg(argv[1]);
+	else
+	{
+		QDirIterator dir(QCoreApplication::applicationDirPath(), QStringList() << "???????", QDir::Dirs);
+		while (dir.hasNext()) {
+			dir.next();
+			splitandcreatepkg(dir.path());
+		}
+	}
+
 	qDebug() << "Press any key to continue . . ."; getchar();
 	return FALSE;
 }
