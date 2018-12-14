@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
 	{
 		if (!gamedirectory.contains(QDir::toNativeSeparators(QDir::currentPath())))
 			gamedirectory = QDir::currentPath() + QDir::separator() + gamedirectory;
-		qDebug() << gamedirectory << endl;
 		DIRSPLIT dirsplit(gamedirectory, 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN");
 		if (dirsplit.split()) {
 			for each (const QString &entry in dirsplit.entryList()) {
