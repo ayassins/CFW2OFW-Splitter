@@ -22,9 +22,9 @@ bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 			if (f.fileInfo().size() > size)
 				return false;
 			totalsize += f.fileInfo().size();
-			if (totalsize > size)
-				break;
 		}
+		if (totalsize < size)
+			return false;
 	}
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + QDir::separator() + templatefile).size();
