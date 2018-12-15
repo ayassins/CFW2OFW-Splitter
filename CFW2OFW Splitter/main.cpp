@@ -11,26 +11,20 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Splitter v2 ---" << endl << "  -- a.yassin@msn.com --" << endl;
-	QStringList gamedirectorys(a.arguments());
-	if(gamedirectorys.at(0) == QDir::toNativeSeparators(a.applicationFilePath()))
-		gamedirectorys.removeAt(0);
-	if (gamedirectorys.isEmpty())
+	QStringList gamedirectorys(a.arguments()); gamedirectorys.removeFirst();
+	if (argc < 2)
 		gamedirectorys << QDir(QDir::currentPath()).entryList(QStringList() << "BL??????" << "BC??????" << "NP??????", QDir::Dirs | QDir::NoDotAndDotDot);
+	if (gamedirectorys.size() == 0)
+		qDebug() << "no valid directorys BL?????? or BC?????? or NP?????? provided!\n";
 	for each (QString gamedirectory in gamedirectorys)
 	{
-		if (!gamedirectory.contains(QDir::toNativeSeparators(QDir::currentPath())))
+		if (gamedirectory.length() == 8)
 			gamedirectory = QDir::currentPath() + QDir::separator() + gamedirectory;
 		DIRSPLIT dirsplit(gamedirectory, 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN");
-		if (dirsplit.split()) {
-			for each (const QString &entry in dirsplit.entryList()) {
-				qDebug() << entry << endl;
+		if (dirsplit.split())
+			for each (const QString &entry in dirsplit.entryList())
 				PKG(entry).Generate_Package();
-			}
-		}
-		else {
-			PKG(gamedirectory).Generate_Package();
-		}
 	}
 	qDebug() << "Press any key to continue . . ."; getchar();
-	return FALSE;
+	return false;
 }
