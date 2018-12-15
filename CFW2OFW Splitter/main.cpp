@@ -19,16 +19,18 @@ int main(int argc, char *argv[])
 		qDebug() << "no valid directorys BL?????? or BC?????? or NP?????? provided!" << endl << "Press any key to continue . . ."; getchar();
 		return -1;
 	}
+	int i = 0;
 	for each (QString gamedirectory in gamedirectorys)
 	{
 		if (gamedirectory.length() == 8)
 			gamedirectory = QDir::currentPath() + QDir::separator() + gamedirectory;
-		QStringList g_split = DIRSPLIT(gamedirectory, 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN").entryList();
-		if (g_split.isEmpty())
-			g_split << gamedirectory;
-		for each (const QString &entry in g_split)
-			PKG(entry).Generate_Package();
+		QStringList splitted_dirs = DIRSPLIT(gamedirectory, 4294705152, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN").entryList();
+		if (splitted_dirs.isEmpty())
+			splitted_dirs << gamedirectory;
+		for each (const QString &splitted_dir in splitted_dirs)
+			if (PKG(splitted_dir).Generate_Package())
+				i++;
 	}
-	qDebug() << "finish generate " << pkgcount << "packages" << endl << "Press any key to continue . . ."; getchar();
+	qDebug() << "finish generate (" << i << ")packages" << endl << "Press any key to continue . . ."; getchar();
 	return false;
 }
