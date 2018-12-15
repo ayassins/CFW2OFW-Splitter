@@ -14,15 +14,17 @@ DIRSPLIT::~DIRSPLIT()
 
 bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 {
-	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
-	qint64 totalsize = 0;
-	while (f.hasNext()) {
-		f.next();
-		if (f.fileInfo().size() > size)
-			return false;
-		totalsize += f.fileInfo().size();
-		if (totalsize > size)
-			break;
+	{
+		QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
+		qint64 totalsize = 0;
+		while (f.hasNext()) {
+			f.next();
+			if (f.fileInfo().size() > size)
+				return false;
+			totalsize += f.fileInfo().size();
+			if (totalsize > size)
+				break;
+		}
 	}
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + QDir::separator() + templatefile).size();
