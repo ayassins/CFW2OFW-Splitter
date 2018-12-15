@@ -69,5 +69,7 @@ bool DIRSPLIT::split()
 
 QStringList &DIRSPLIT::entryList()
 {
-	return splitteddirectorylist;
+	if(split())
+		return splitteddirectorylist;
+	return QStringList();
 }
