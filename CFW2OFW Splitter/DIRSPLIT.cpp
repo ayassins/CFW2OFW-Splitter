@@ -12,7 +12,7 @@ DIRSPLIT::~DIRSPLIT()
 }
 
 
-bool DIRSPLIT::canSplit()
+bool DIRSPLIT::isSplittable()
 {
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 	qint64 totalsize = 0;
@@ -30,7 +30,7 @@ bool DIRSPLIT::canSplit()
 
 bool DIRSPLIT::split()
 {
-	if (!canSplit())
+	if (!isSplittable())
 		return false;
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + '\\' + templatefile).size();

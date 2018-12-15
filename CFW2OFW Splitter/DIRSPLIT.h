@@ -13,7 +13,7 @@ public:
 	~DIRSPLIT();
 	bool split();
 	QStringList &entryList();
-	bool canSplit();
+	bool isSplittable();
 private:
 	QString path;
 	qint64 size;

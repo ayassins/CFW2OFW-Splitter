@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	QStringList gamedirectorys(a.arguments()); gamedirectorys.removeFirst();
 	if (argc < 2)
 		gamedirectorys << QDir(QDir::currentPath()).entryList(QStringList() << "BL??????" << "BC??????" << "NP??????", QDir::Dirs | QDir::NoDotAndDotDot);
-	if (gamedirectorys.size() == 0)
+	if (gamedirectorys.isEmpty())
 	{
 		qDebug() << "no valid directorys BL?????? or BC?????? or NP?????? provided!\n";
 		return -1;
