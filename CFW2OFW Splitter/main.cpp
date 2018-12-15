@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 		gamedirectorys << QDir(QDir::currentPath()).entryList(QStringList() << "BL??????" << "BC??????" << "NP??????", QDir::Dirs | QDir::NoDotAndDotDot);
 	if (gamedirectorys.isEmpty())
 	{
-		qDebug() << "no valid directorys BL?????? or BC?????? or NP?????? provided!\n";
+		qDebug() << "no valid directorys BL?????? or BC?????? or NP?????? provided!" << endl << "Press any key to continue . . ."; getchar();
 		return -1;
 	}
 	int pkgcount = 0;
@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
 				if (PKG(entry).Generate_Package())
 					pkgcount++;
 	}
-	qDebug() << "finish generate " << pkgcount << "packages\n";
-	qDebug() << "Press any key to continue . . ."; getchar();
+	qDebug() << "finish generate " << pkgcount << "packages" << endl << "Press any key to continue . . ."; getchar();
 	return false;
 }
