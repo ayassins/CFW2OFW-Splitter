@@ -61,7 +61,7 @@ bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 }
 
 
-QStringList &DIRSPLIT::entryList(const QStringList &templatefiles, qint64 size)
+QStringList DIRSPLIT::entryList(const QStringList &templatefiles, qint64 size)
 {
 	if(split(templatefiles, size))
 		return splitteddirectorylist;
