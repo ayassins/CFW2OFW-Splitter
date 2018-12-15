@@ -25,7 +25,7 @@ bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 			break;
 	}
 	for each (const QString &templatefile in templatefiles) {
-		size -= QFile(path + '\\' + templatefile).size();
+		size -= QFile(path + QDir::separator() + templatefile).size();
 	}
 	qint64 leftSpace = size;
 	int part_number = 1;
@@ -45,9 +45,9 @@ bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 			splitteddirectorylist << DestPath;
 		QDir().mkpath(DestPath + f.fileInfo().absolutePath().mid(path.length()));
 		for each (const QString &templatefile in templatefiles) {
-			if(templatefile.contains('\\'))
-				QDir().mkpath(DestPath + '\\' + templatefile.left(templatefile.lastIndexOf('\\')));
-			QFile::copy(path + '\\' + templatefile, DestPath + '\\' + templatefile);
+			if(templatefile.contains(QDir::separator()))
+				QDir().mkpath(DestPath + QDir::separator() + templatefile.left(templatefile.lastIndexOf(QDir::separator())));
+			QFile::copy(path + QDir::separator() + templatefile, DestPath + QDir::separator() + templatefile);
 		}
 		QFile::rename(f.filePath(), DestPath + f.filePath().mid(path.length()));
 		if (!QFile(DestPath + f.filePath().mid(path.length())).exists())
