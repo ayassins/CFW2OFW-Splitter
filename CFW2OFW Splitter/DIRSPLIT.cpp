@@ -2,7 +2,7 @@
 
 
 
-DIRSPLIT::DIRSPLIT(const QString &path, qint64 size, const QStringList &templatefiles) : path(path), templatefiles(templatefiles), size(size)
+DIRSPLIT::DIRSPLIT(const QString &path) : path(path)
 {
 }
 
@@ -12,7 +12,7 @@ DIRSPLIT::~DIRSPLIT()
 }
 
 
-bool DIRSPLIT::isSplittable()
+bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 {
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 	qint64 totalsize = 0;
@@ -22,16 +22,8 @@ bool DIRSPLIT::isSplittable()
 			return false;
 		totalsize += f.fileInfo().size();
 		if (totalsize > size)
-			return true;
+			break;
 	}
-	return false;
-}
-
-
-bool DIRSPLIT::split()
-{
-	if (!isSplittable())
-		return false;
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + '\\' + templatefile).size();
 	}
@@ -67,9 +59,9 @@ bool DIRSPLIT::split()
 }
 
 
-QStringList &DIRSPLIT::entryList()
+QStringList &DIRSPLIT::entryList(const QStringList &templatefiles, qint64 size)
 {
-	if(split())
+	if(split(templatefiles, size))
 		return splitteddirectorylist;
 	return QStringList();
 }
