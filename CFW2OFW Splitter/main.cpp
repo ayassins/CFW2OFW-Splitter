@@ -24,11 +24,7 @@ int main(int argc, char *argv[])
 	{
 		if (gamedirectory.length() == 8)
 			gamedirectory = QDir::currentPath() + QDir::separator() + gamedirectory;
-		QStringList splitted_dirs = DIRSPLIT(gamedirectory).entryList(QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN");
-		if (splitted_dirs.isEmpty())
-			splitted_dirs << gamedirectory;
-		for each (const QString &splitted_dir in splitted_dirs)
-			if (PKG(splitted_dir).Generate_Package())
+		if (PKG(gamedirectory,PKG::Debug, 4294705152).generate_package())
 				i++;
 	}
 	qDebug() << "Finish generating (" << i << ") packages." << endl << "Press any key to continue . . ."; getchar();
