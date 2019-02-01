@@ -2,7 +2,7 @@
 
 
 
-PKG::PKG(const QString &path, PkgType type) : path(path), pkgtype(type)
+PKG::PKG(const QString &path, PkgType type, qint64 size) : path(path), type(type),size(size)
 {	
 }
 
@@ -13,7 +13,27 @@ PKG::~PKG()
 }
 
 
-bool PKG::Generate_Package()
+bool PKG::generate_package()
+{
+	if (path.isEmpty())
+		return false;
+	if (size > 0)
+	{
+		QStringList splitted_dirs = DIRSPLIT(path).entryList(QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", size);
+		if (splitted_dirs.isEmpty())
+			return false;
+		for each (const QString &splitted_dir in splitted_dirs)
+			if (!internal_generate_package(splitted_dir, type))
+				return false;
+	}
+	else if (size == 0)
+		if (!internal_generate_package(path, type))
+			return false;
+	return true;
+}
+
+
+bool PKG::internal_generate_package(QString path, PkgType type)
 {
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
@@ -61,10 +81,10 @@ bool PKG::Generate_Package()
 		return false;
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
-	QString pkg_name = QDir::currentPath() + '\\'+ Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
+	QString pkg_name = QDir::currentPath() + '\\' + Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
 	if (!QDir().rename(QDir::currentPath() + '\\' + Content_ID + ".pkg", pkg_name))
 		return false;
-	if (pkgtype == Han)
+	if (type == Han)
 	{
 		proc.start(ps3xploit_rifgen_edatresign, QStringList() << pkg_name);
 		if (!proc.waitForStarted())
