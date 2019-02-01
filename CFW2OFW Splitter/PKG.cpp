@@ -26,7 +26,7 @@ bool PKG::generate_package()
 			if (!internal_generate_package(splitted_dir, type))
 				return false;
 	}
-	else if (size == 0)
+	else
 		if (!internal_generate_package(path, type))
 			return false;
 	return true;
