@@ -45,9 +45,8 @@ bool PKG::Generate_Package()
 			<< "PackageType = DiscGamePatch" << endl;
 	}
 	else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT") {
-		p.Title_ID(Title_ID);
 		if (Category == "DG")
-			p.Category("HG");
+			p.App_Ver("01.00");
 		out << "ContentType = GameExec" << endl
 			<< "PackageType = HDDGamePatch" << endl;
 	}
