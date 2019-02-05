@@ -11,7 +11,8 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Splitter v3 ---" << endl << "  -- a.yassin@msn.com --" << endl;
-	QStringList gamedirectorys(a.arguments()); gamedirectorys.removeFirst();
+	QStringList gamedirectorys(a.arguments());
+	gamedirectorys.removeFirst();
 	if (argc < 2)
 		gamedirectorys << QDir(QDir::currentPath()).entryList(QStringList() << "BL??????" << "BC??????" << "NP??????", QDir::Dirs | QDir::NoDotAndDotDot);
 	if (gamedirectorys.isEmpty())
