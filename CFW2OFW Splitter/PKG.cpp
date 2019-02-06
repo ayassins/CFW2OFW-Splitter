@@ -24,7 +24,7 @@ bool PKG::generate_packages()
 		gamespaths << DIRSPLIT(path).entryList(QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", size);
 	if (gamespaths.isEmpty())
 		gamespaths << path;
-	for each (QString &path in gamespaths)
+	for each (QString path in gamespaths)
 	{
 		if (path.endsWith('\\'))
 			path.remove(path.size() - 1, 1);
@@ -56,7 +56,7 @@ bool PKG::generate_packages()
 		}
 		else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT") {
 			if (Category == "DG")
-				p.App_Ver = "01.00";
+				p.App_Ver("01.00");
 			out << "ContentType = GameExec" << endl
 				<< "PackageType = HDDGamePatch" << endl;
 		}
