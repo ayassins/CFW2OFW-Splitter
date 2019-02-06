@@ -18,7 +18,7 @@ public:
 	};
 	PKG(const QString &path, PkgType type, qint64 size);
 	~PKG();
-	bool generate_package();
+	bool generate_packages();
 private:
 	QString path;
 	PkgType type;
@@ -26,7 +26,4 @@ private:
 	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
 	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
 	QString ps3xploit_rifgen_edatresign = QDir::currentPath() + "\\bin\\ps3xploit_rifgen_edatresign.exe";
-	QProcess proc;
-	bool internal_generate_package(QString path, PkgType type);
 };
-
