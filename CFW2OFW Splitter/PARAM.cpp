@@ -1,468 +1,175 @@
 #include "PARAM.h"
 
 
-PARAM::PARAM(const QString &path)
-{
-	quint32 key_table_start, data_table_start, tables_entries, data_len, data_max_len, data_offset;
-	quint16 key_offset, data_fmt;
+PARAM::PARAM(const QString &path) {
 	f.setFileName(path);
-	f.open(QFile::ReadWrite);
+	f.open(QIODevice::ReadWrite);
 	QDataStream in(&f);
-	in >> magic >> version;
-	in.setByteOrder(QDataStream::LittleEndian);
-	in >> key_table_start >> data_table_start >> tables_entries;
-	for (int i = 0; i < tables_entries; i++)
-	{
-		in >> key_offset >> data_fmt >> data_len >> data_max_len >> data_offset;
-		paramDict.insert(i, qMakePair(key_offset + key_table_start, qMakePair(data_offset + data_table_start, data_max_len)));
-	}
+	in >> s;
 }
 
 
-PARAM::~PARAM()
-{
+PARAM::~PARAM() {
+	if (commit) {
+		f.resize(0);
+		QDataStream out(&f);
+		out << s;
+	}
 	f.close();
 }
 
 
-bool PARAM::isValidParam()
-{
-	return (isValidSignature() && isValidVersion());
+bool PARAM::isparam() {
+	return ((s.header.magic == 0x00505346) && (s.header.version == 0x01010000));
 }
 
 
-bool PARAM::isValidSignature()
-{
-	return magic == 0x00505346;
-}
-
-
-bool PARAM::isValidVersion()
-{
-	return version == 0x01010000;
-}
-
-
-bool PARAM::setKeyValue(QString key, QString value)
-{
-	for (int i = 0; i < paramDict.count(); i++)
-	{
-		f.seek(paramDict[i].first);
-		if (key != f.read(key.size())) continue;
-		f.seek(paramDict[i].second.first);
-		if (value.size() <= paramDict[i].second.second)
-		{
-			QByteArray k_value;
-			k_value.fill(0, paramDict[i].second.second);
-			k_value.insert(0, value);
-			k_value.resize(paramDict[i].second.second);
-			return (f.write(k_value));
-		}
+bool PARAM::insert(const QByteArray &key, const QByteArray &data, quint32 data_max_len) {
+	int i = s.key_table.indexOf(key.toUpper());
+	if (i < 0) {
+		s.header.tables_entries += 1;
+		SFO::index index;
+		index.data_fmt = 0x0402;
+		index.data_len = data.length();
+		index.data_max_len = data_max_len;
+		s.index_table << index;
+		s.key_table << key;
+		s.data_table << data;
 	}
-	return false;
-}
-
-
-QString PARAM::getKeyValue(QString key)
-{
-	for (int i = 0; i < paramDict.count(); i++)
-	{
-		f.seek(paramDict[i].first);
-		if (key != f.read(key.size())) continue;
-		f.seek(paramDict[i].second.first);
-		return f.read(paramDict[i].second.second);
+	else {
+		s.index_table[i].data_len = data.length();
+		s.data_table[i] = data;
 	}
-	return QString();
+	commit = true;
+	return true;
 }
 
 
-QString PARAM::Account_ID()
-{
-	return getKeyValue("ACCOUNT_ID");
+bool PARAM::remove(const QByteArray &key) {
+	int i = s.key_table.indexOf(key.toUpper());
+	if (i < 0)
+		return false;
+	s.header.tables_entries -= 1;
+	s.index_table.remove(i);
+	s.key_table.remove(i);
+	s.data_table.remove(i);
+	commit = true;
+	return true;
 }
 
 
-bool PARAM::Account_ID(QString value)
-{
-	return setKeyValue("ACCOUNT_ID", value);
+QByteArray PARAM::at(const QByteArray &key) {
+	int i = s.key_table.indexOf(key.toUpper());
+	if (i < 0)
+		return QByteArray();
+	return s.data_table[i];
 }
 
 
-QString PARAM::Analog_Mode()
-{
-	return getKeyValue("ANALOG_MODE");
+int PARAM::length() {
+	return s.header.tables_entries;
 }
 
 
-bool PARAM::Analog_Mode(QString value)
-{
-	return setKeyValue("ANALOG_MODE", value);
+QDataStream &operator>>(QDataStream &in, PARAM::SFO &s) {
+	in.device()->reset();
+	in.setByteOrder(QDataStream::BigEndian);
+	in >> s.header.magic >> s.header.version;
+	in.setByteOrder(QDataStream::LittleEndian);
+	in >> s.header.key_table_start >> s.header.data_table_start >> s.header.tables_entries;
+	s.index_table.resize(s.header.tables_entries);
+	for (int i = 0; i < s.header.tables_entries; ++i)
+		in >> s.index_table[i].key_offset >> s.index_table[i].data_fmt >> s.index_table[i].data_len
+		>> s.index_table[i].data_max_len >> s.index_table[i].data_offset;
+	for (int i = 0; i < s.header.tables_entries; ++i) {
+		quint8 byte;
+		QByteArray key;
+		do {
+			in >> byte;
+			if (byte)
+				key.append(byte);
+		} while (byte);
+		s.key_table << key;
+	}
+	in.device()->seek(s.header.data_table_start);
+	for (int i = 0; i < s.header.tables_entries; ++i) {
+		QByteArray data(s.index_table[i].data_max_len, '\0');
+		in.readRawData(data.data(), s.index_table[i].data_max_len);
+		s.data_table << data;
+	}
+	return in;
 }
 
 
-QString PARAM::App_Ver()
-{
-	return getKeyValue("APP_VER");
+QDataStream &operator<<(QDataStream &out, PARAM::SFO  &s) {
+	out.device()->reset();
+	out.setByteOrder(QDataStream::BigEndian);
+	s.header.magic = 0x00505346;
+	s.header.version = 0x01010000;
+	out << s.header.magic << s.header.version;
+	out.setByteOrder(QDataStream::LittleEndian);
+	s.header.key_table_start = 0x14 + s.index_table.count() * 0x10;
+	s.header.data_table_start = s.header.key_table_start;
+	s.header.tables_entries = s.index_table.count();
+	for (auto key : s.key_table)
+		s.header.data_table_start += key.length() + 1;
+	if (s.header.data_table_start % 4 != 0)
+		s.header.data_table_start = (s.header.data_table_start / 4 + 1) * 4;
+	out << s.header.key_table_start << s.header.data_table_start << s.header.tables_entries;
+	s.index_table[0].key_offset = s.index_table[0].data_offset = 0;
+	for (int i = 0; i < s.header.tables_entries; ++i) {
+		s.index_table[i + 1].key_offset = s.index_table[i].key_offset + s.key_table[i].length() + 1;
+		s.index_table[i + 1].data_offset = s.index_table[i].data_offset + s.index_table[i].data_max_len;
+		out << s.index_table[i].key_offset << s.index_table[i].data_fmt << s.index_table[i].data_len
+			<< s.index_table[i].data_max_len << s.index_table[i].data_offset;
+	}
+	for (int i = 0; i < s.header.tables_entries; ++i)
+		out.writeRawData(s.key_table[i].append('\0').toUpper().data(), s.key_table[i].length());
+	out.device()->seek(s.header.data_table_start);
+	for (int i = 0; i < s.header.tables_entries; ++i)
+		out.writeRawData(s.data_table[i].data(), s.index_table[i].data_max_len);
+	return out;
 }
 
 
-bool PARAM::App_Ver(QString value)
-{
-	return setKeyValue("APP_VER", value);
-}
-
-
-QString PARAM::Category()
-{
-	return getKeyValue("CATEGORY");
-}
-
-
-bool PARAM::Category(QString value)
-{
-	return setKeyValue("CATEGORY", value);
-}
-
-
-QString PARAM::Content_ID()
-{
-	return getKeyValue("CONTENT_ID");
-}
-
-
-bool PARAM::Content_ID(QString value)
-{
-	return setKeyValue("CONTENT_ID", value);
-}
-
-
-QString PARAM::Detail()
-{
-	return getKeyValue("DETAIL");
-}
-
-
-bool PARAM::Detail(QString value)
-{
-	return setKeyValue("DETAIL", value);
-}
-
-
-QString PARAM::Gamedata_ID()
-{
-	return getKeyValue("GAMEDATA_ID");
-}
-
-
-bool PARAM::Gamedata_ID(QString value)
-{
-	return setKeyValue("GAMEDATA_ID", value);
-}
-
-
-QString PARAM::License()
-{
-	return getKeyValue("LICENSE");
-}
-
-
-bool PARAM::License(QString value)
-{
-	return setKeyValue("LICENSE", value);
-}
-
-
-QString PARAM::NP_Communication_ID()
-{
-	return getKeyValue("NP_COMMUNICATION_ID");
-}
-
-
-bool PARAM::NP_Communication_ID(QString value)
-{
-	return setKeyValue("NP_COMMUNICATION_ID", value);
-}
-
-
-QString PARAM::NPcommid()
-{
-	return getKeyValue("NPCOMMID");
-}
-
-
-bool PARAM::NPcommid(QString value)
-{
-	return setKeyValue("NPCOMMID", value);
-}
-
-
-QString PARAM::PADDING()
-{
-	return getKeyValue("PADDING");
-}
-
-
-bool PARAM::PADDING(QString value)
-{
-	return setKeyValue("PADDING", value);
-}
-
-
-QString PARAM::Params()
-{
-	return getKeyValue("PARAMS");
-}
-
-
-bool PARAM::Params(QString value)
-{
-	return setKeyValue("PARAMS", value);
-}
-
-
-QString PARAM::Params2()
-{
-	return getKeyValue("PARAMS2");
-}
-
-
-bool PARAM::Params2(QString value)
-{
-	return setKeyValue("PARAMS2", value);
-}
-
-
-QString PARAM::Patch_File()
-{
-	return getKeyValue("PATCH_FILE");
-}
-
-
-bool PARAM::Patch_File(QString value)
-{
-	return setKeyValue("PATCH_FILE", value);
-}
-
-
-QString PARAM::Ps3_System_Ver()
-{
-	return getKeyValue("PS3_SYSTEM_VER");
-}
-
-
-bool PARAM::Ps3_System_Ver(QString value)
-{
-	return setKeyValue("PS3_SYSTEM_VER", value);
-}
-
-
-QString PARAM::Savedata_detail()
-{
-	return getKeyValue("SAVEDATA_DETAIL");
-}
-
-
-bool PARAM::Savedata_detail(QString value)
-{
-	return setKeyValue("SAVEDATA_DETAIL", value);
-}
-
-
-QString PARAM::Savedata_Directory()
-{
-	return getKeyValue("SAVEDATA_DIRECTORY");
-}
-
-
-bool PARAM::Savedata_Directory(QString value)
-{
-	return setKeyValue("SAVEDATA_DIRECTORY", value);
-}
-
-
-QString PARAM::Savedata_File_List()
-{
-	return getKeyValue("SAVEDATA_FILE_LIST");
-}
-
-
-bool PARAM::Savedata_File_List(QString value)
-{
-	return setKeyValue("SAVEDATA_FILE_LIST", value);
-}
-
-
-QString PARAM::Savedata_List_Param()
-{
-	return getKeyValue("SAVEDATA_LIST_PARAM");
-}
-
-
-bool PARAM::Savedata_List_Param(QString value)
-{
-	return setKeyValue("SAVEDATA_LIST_PARAM", value);
-}
-
-
-QString PARAM::Savedata_Params()
-{
-	return getKeyValue("SAVEDATA_PARAMS");
-}
-
-
-bool PARAM::Savedata_Params(QString value)
-{
-	return setKeyValue("SAVEDATA_PARAMS", value);
-}
-
-
-QString PARAM::Savedata_Title()
-{
-	return getKeyValue("SAVEDATA_TITLE");
-}
-
-
-bool PARAM::Savedata_Title(QString value)
-{
-	return setKeyValue("SAVEDATA_TITLE", value);
-}
-
-
-QString PARAM::Sub_Title()
-{
-	return getKeyValue("SUB_TITLE");
-}
-
-
-bool PARAM::Sub_Title(QString value)
-{
-	return setKeyValue("SUB_TITLE", value);
-}
-
-
-QString PARAM::Target_App_Ver()
-{
-	return getKeyValue("TARGET_APP_VER");
-}
-
-
-bool PARAM::Target_App_Ver(QString value)
-{
-	return setKeyValue("TARGET_APP_VER", value);
-}
-
-
-QString PARAM::Title()
-{
-	return getKeyValue("TITLE");
-}
-
-
-bool PARAM::Title(QString value)
-{
-	return setKeyValue("TITLE", value);
-}
-
-
-QString PARAM::Title_ID()
-{
-	return getKeyValue("TITLE_ID");
-}
-
-
-bool PARAM::Title_ID(QString value)
-{
-	return setKeyValue("TITLE_ID", value);
-}
-
-
-QString PARAM::Title_xx()
-{
-	return getKeyValue("TITLE_xx");
-}
-
-
-bool PARAM::Title_xx(QString value)
-{
-	return setKeyValue("TITLE_xx", value);
-}
-
-
-QString PARAM::TitleID0xx()
-{
-	return getKeyValue("TITLEID0xx");
-}
-
-
-bool PARAM::TitleID0xx(QString value)
-{
-	return setKeyValue("TITLEID0xx", value);
-}
-
-
-QString PARAM::Version()
-{
-	return getKeyValue("VERSION");
-}
-
-
-bool PARAM::Version(QString value)
-{
-	return setKeyValue("VERSION", value);
-}
-
-
-QString PARAM::Xmb_Apps()
-{
-	return getKeyValue("XMB_APPS");
-}
-
-
-bool PARAM::Xmb_Apps(QString value)
-{
-	return setKeyValue("XMB_APPS", value);
-}
-
-
-//ACCOUNT_ID 				utf8 - S
-//ACCOUNTID 				utf8
-//ANALOG_MODE				int32
-//APP_VER 				utf8
-//ATTRIBUTE 				int32
-//BOOTABLE 				int32
-//CATEGORY 				utf8
-//CONTENT_ID				utf8
-//DETAIL 					utf8
-//GAMEDATA_ID				utf8
-//ITEM_PRIORITY			int32
-//LANG 					int32
-//LICENSE 				utf8
-//NP_COMMUNICATION_ID 	utf8
-//NPCOMMID 				utf8
-//PADDING 				utf8 - S
-//PARAMS 					utf8 - S
-//PARAMS2 				utf8 - S
-//PATCH_FILE 				utf8
-//PS3_SYSTEM_VER 			utf8
-//REGION_DENY 			int32
-//RESOLUTION 				int32
-//SAVEDATA_DETAIL 		utf8
-//SAVEDATA_DIRECTORY 		utf8
-//SAVEDATA_FILE_LIST 		utf8 - S
-//SAVEDATA_LIST_PARAM 	utf8
-//SAVEDATA_PARAMS 		utf8 - S
-//SAVEDATA_TITLE 			utf8
-//SOUND_FORMAT		 	int32
-//SOURCE					int32
-//SUB_TITLE				utf8
-//TARGET_APP_VER			utf8
-//TITLE 					utf8
-//TITLE_ID				utf8
-//PARENTAL_LEVEL 			int32
-//PARENTALLEVEL 			int32
-//VERSION 				utf8
-//XMB_APPS 				int32
-
-//PARENTAL_LEVEL_x 		int32
-//TITLE_xx 				utf8
-//TITLEID0xx				utf8
+//ACCOUNT_ID					utf8 - S 					16 		(0x010)
+//ACCOUNTID 					utf8 						16 		(0x010)
+//ANALOG_MODE 					int32	 					4 		(0x004)
+//APP_VER 						utf8 						8		(0x008)
+//ATTRIBUTE 					int32 						4 		(0x004)
+//BOOTABLE 						int32 						4 		(0x004)
+//CATEGORY 						utf8 						4 		(0x004)
+//CONTENT_ID 					utf8 						48		(0x030)
+//DETAIL 						utf8 		 				1024 	(0x400)
+//GAMEDATA_ID 					utf8 		 				32 		(0x020)
+//ITEM_PRIORITY 				int32	 					4 		(0x004)
+//LANG 							int32 						4 		(0x004)
+//LICENSE 						utf8 					 	512 	(0x200)
+//NP_COMMUNICATION_ID 			utf8 						16 		(0x010)
+//NPCOMMID 						utf8 						16 		(0x010)
+//PADDING 						utf8 - S 					8 		(0x008)
+//PARAMS 						utf8 - S 					1024 	(0x400)
+//PARAMS2 						utf8 - S 					12 		(0x00C)
+//PARENTAL_LEVEL_x 				int32 						4 		(0x004)
+//PARENTAL_LEVEL 				int32 						4		(0x004)
+//PARENTALLEVEL 				int32 						4 		(0x004)
+//PATCH_FILE 					utf8 	 					32 		(0x020)
+//PS3_SYSTEM_VER 				utf8 						8 		(0x008)
+//REGION_DENY 					int32 						4 		(0x004)
+//RESOLUTION 					int32 						4 		(0x004)
+//SAVEDATA_DETAIL 				utf8 					 	1024 	(0x400)
+//SAVEDATA_DIRECTORY 			utf8 					 	64 		(0x040)
+//SAVEDATA_FILE_LIST			utf8 - S 					3168 	(0xC60)
+//SAVEDATA_LIST_PARAM 			utf8 						8 		(0x008)
+//SAVEDATA_PARAMS 				utf8 - S					128 	(0x080)
+//SAVEDATA_TITLE 				utf8 				 		128 	(0x080)
+//SOUND_FORMAT 					int32 						4 		(0x004)
+//SOURCE						int32 						4 		(0x004)
+//SUB_TITLE 					utf8 			 			128 	(0x080)
+//TARGET_APP_VER 				utf8					 	8		(0x008)
+//TITLE 						utf8 		 				128 	(0x080)
+//TITLE_ID 						utf8 						16		(0x010)
+//TITLE_xx 						utf8 			 			128 	(0x080)
+//TITLEID0xx 					utf8 						16		(0x010)
+//VERSION 						utf8 						8 		(0x008)
+//XMB_APPS 						int32 						4 		(0x004)
