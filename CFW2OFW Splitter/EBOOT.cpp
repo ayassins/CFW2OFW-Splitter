@@ -1,8 +1,7 @@
 #include "EBOOT.h"
 
 
-EBOOT::EBOOT(const QString &path)
-{
+EBOOT::EBOOT(const QString &path) {
 	f.setFileName(path);
 	f.open(QIODevice::ReadOnly);
 	QDataStream in(&f);
@@ -10,26 +9,23 @@ EBOOT::EBOOT(const QString &path)
 }
 
 
-EBOOT::~EBOOT()
-{
+EBOOT::~EBOOT() {
 	f.close();
 }
 
 
-bool EBOOT::iseboot()
-{
+bool EBOOT::iseboot() {
 	return ((magic == 0x53434500) && (version == 0x02000000));
 }
 
 
-QString EBOOT::Content_ID()
-{
+QString EBOOT::Content_ID() {
 	if (!iseboot())
 		return QString();
 	QDataStream in(&f);
 	in.device()->seek(448);
 	QByteArray ContentID(0x24, '\0');
-	in.readRawData(ContentID.data(),0x24);
+	in.readRawData(ContentID.data(), 0x24);
 	ContentID.replace("PATCH", "GAME0");
 	ContentID.replace("SHIP0", "GAME0");
 	return ContentID;
