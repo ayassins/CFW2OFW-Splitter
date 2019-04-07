@@ -2,19 +2,16 @@
 
 
 
-PKG::PKG(const QString &path, PkgType type, qint64 size) : path(path), type(type),size(size)
-{	
+PKG::PKG(const QString &path, PkgType type, qint64 size) : path(path), type(type), size(size) {
 }
 
 
-PKG::~PKG()
-{
+PKG::~PKG() {
 	QDir().remove(package_conf);
 }
 
 
-bool PKG::generate_packages()
-{
+bool PKG::generate_packages() {
 	if (path.isEmpty())
 		return false;
 	if (path.endsWith('\\'))
