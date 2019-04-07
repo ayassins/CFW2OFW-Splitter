@@ -56,7 +56,7 @@ bool PKG::generate_packages()
 		}
 		else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT") {
 			if (Category == "DG")
-				p.App_Ver("01.00");
+				p.insert(PARAM::APP_VER, "01.00");
 			out << "ContentType = GameExec" << endl
 				<< "PackageType = HDDGamePatch" << endl;
 		}
