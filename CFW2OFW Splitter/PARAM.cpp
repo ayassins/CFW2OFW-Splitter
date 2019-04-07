@@ -24,16 +24,16 @@ bool PARAM::isparam() {
 }
 
 
-bool PARAM::insert(const QByteArray &key, const QByteArray &data, quint32 data_max_len) {
-	int i = s.key_table.indexOf(key.toUpper());
+bool PARAM::insert(key key, const QByteArray &data) {
+	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0) {
 		s.header.tables_entries += 1;
 		SFO::index index;
 		index.data_fmt = 0x0402;
 		index.data_len = data.length();
-		index.data_max_len = data_max_len;
+		index.data_max_len = data_max_len[key];
 		s.index_table << index;
-		s.key_table << key;
+		s.key_table << key_name[key];
 		s.data_table << data;
 	}
 	else {
@@ -45,8 +45,8 @@ bool PARAM::insert(const QByteArray &key, const QByteArray &data, quint32 data_m
 }
 
 
-bool PARAM::remove(const QByteArray &key) {
-	int i = s.key_table.indexOf(key.toUpper());
+bool PARAM::remove(key key) {
+	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0)
 		return false;
 	s.header.tables_entries -= 1;
@@ -58,8 +58,8 @@ bool PARAM::remove(const QByteArray &key) {
 }
 
 
-QByteArray PARAM::at(const QByteArray &key) {
-	int i = s.key_table.indexOf(key.toUpper());
+QByteArray PARAM::at(key key) {
+	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0)
 		return QByteArray();
 	return s.data_table[i];
@@ -130,92 +130,3 @@ QDataStream &operator<<(QDataStream &out, PARAM::SFO  &s) {
 		out.writeRawData(s.data_table[i].data(), s.index_table[i].data_max_len);
 	return out;
 }
-
-
-enum data_max_len {
-	ACCOUNT_ID = 0x010,
-	ACCOUNTID = 0x010,
-	ANALOG_MODE = 0x004,
-	APP_VER = 0x008,
-	ATTRIBUTE = 0x004,
-	BOOTABLE = 0x004,
-	CATEGORY = 0x004,
-	CONTENT_ID = 0x030,
-	DETAIL = 0x400,
-	GAMEDATA_ID = 0x020,
-	ITEM_PRIORITY = 0x004,
-	LANG = 0x004,
-	LICENSE = 0x200,
-	NP_COMMUNICATION_ID = 0x010,
-	NPCOMMID = 0x010,
-	PADDING = 0x008,
-	PARAMS = 0x400,
-	PARAMS2 = 0x00C,
-	PARENTAL_LEVEL_x = 0x004,
-	PARENTAL_LEVEL = 0x004,
-	PARENTALLEVEL = 0x004,
-	PATCH_FILE = 0x020,
-	PS3_SYSTEM_VER = 0x008,
-	REGION_DENY = 0x004,
-	RESOLUTION = 0x004,
-	SAVEDATA_DETAIL = 0x400,
-	SAVEDATA_DIRECTORY = 0x040,
-	SAVEDATA_FILE_LIST = 0xC60,
-	SAVEDATA_LIST_PARAM = 0x008,
-	SAVEDATA_PARAMS = 0x080,
-	SAVEDATA_TITLE = 0x080,
-	SOUND_FORMAT = 0x004,
-	SOURCE = 0x004,
-	SUB_TITLE = 0x080,
-	TARGET_APP_VER = 0x008,
-	TITLE = 0x080,
-	TITLE_ID = 0x010,
-	TITLE_xx = 0x080,
-	TITLEID0xx = 0x010,
-	VERSION = 0x008,
-	XMB_APPS = 0x004
-};
-
-enum key {
-	ACCOUNT_ID,
-	ACCOUNTID,
-	ANALOG_MODE,
-	APP_VER,
-	ATTRIBUTE,
-	BOOTABLE,
-	CATEGORY,
-	CONTENT_ID,
-	DETAIL,
-	GAMEDATA_ID,
-	ITEM_PRIORITY,
-	LANG,
-	LICENSE,
-	NP_COMMUNICATION_ID,
-	NPCOMMID,
-	PADDING,
-	PARAMS,
-	PARAMS2,
-	PARENTAL_LEVEL_x,
-	PARENTAL_LEVEL,
-	PARENTALLEVEL,
-	PATCH_FILE,
-	PS3_SYSTEM_VER,
-	REGION_DENY,
-	RESOLUTION,
-	SAVEDATA_DETAIL,
-	SAVEDATA_DIRECTORY,
-	SAVEDATA_FILE_LIST,
-	SAVEDATA_LIST_PARAM,
-	SAVEDATA_PARAMS,
-	SAVEDATA_TITLE,
-	SOUND_FORMAT,
-	SOURCE,
-	SUB_TITLE,
-	TARGET_APP_VER,
-	TITLE,
-	TITLE_ID,
-	TITLE_xx,
-	TITLEID0xx,
-	VERSION,
-	XMB_APPS
-};
