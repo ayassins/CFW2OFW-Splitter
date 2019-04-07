@@ -9,12 +9,12 @@
 class DIRSPLIT
 {
 public:
-	DIRSPLIT(const QString &path);
+	DIRSPLIT(const QString & path, const QStringList &templatefiles = QStringList(), qint64 size = 4294705152);
 	~DIRSPLIT();
-	QStringList entryList(const QStringList &templatefiles = QStringList(), qint64 size = 4294705152);
+	QStringList split();
 private:
 	QString path;
-	QStringList splitteddirectorylist;
-	bool split(const QStringList &templatefiles, qint64 size);
+	QStringList templatefiles;
+	qint64 size;
 };
 

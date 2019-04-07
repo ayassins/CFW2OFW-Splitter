@@ -2,7 +2,7 @@
 
 
 
-DIRSPLIT::DIRSPLIT(const QString &path) : path(path)
+DIRSPLIT::DIRSPLIT(const QString &path, const QStringList &templatefiles, qint64 size) : path(path), templatefiles(templatefiles),size(size)
 {
 }
 
@@ -12,19 +12,20 @@ DIRSPLIT::~DIRSPLIT()
 }
 
 
-bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
+QStringList DIRSPLIT::split()
 {
+	QStringList splitteddirectorylist;
 	{
 		QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 		qint64 totalsize = 0;
 		while (f.hasNext()) {
 			f.next();
 			if (f.fileInfo().size() > size)
-				return false;
+				return QStringList();
 			totalsize += f.fileInfo().size();
 		}
 		if (totalsize < size)
-			return false;
+			return QStringList();
 	}
 	for each (const QString &templatefile in templatefiles) {
 		size -= QFile(path + QDir::separator() + templatefile).size();
@@ -53,17 +54,9 @@ bool DIRSPLIT::split(const QStringList &templatefiles, qint64 size)
 		}
 		QFile::rename(f.filePath(), DestPath + f.filePath().mid(path.length()));
 		if (!QFile(DestPath + f.filePath().mid(path.length())).exists())
-			return false;
+			return QStringList();
 	}
 	if (!QDir(path).removeRecursively())
-		return false;
-	return true;
-}
-
-
-QStringList DIRSPLIT::entryList(const QStringList &templatefiles, qint64 size)
-{
-	if(split(templatefiles, size))
-		return splitteddirectorylist;
-	return QStringList();
+		return QStringList();
+	return splitteddirectorylist;
 }
