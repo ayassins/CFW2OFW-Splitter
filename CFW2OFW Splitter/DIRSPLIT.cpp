@@ -28,9 +28,9 @@ QStringList DIRSPLIT::split()
 	}
 	for each (const QString &templatefile in templatefiles)
 		size -= QFile(path + QDir::separator() + templatefile).size();
+	QStringList splitteddirectorylist;
 	qint64 leftSpace = size;
 	int part_number = 1;
-	QStringList splitteddirectorylist;
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
 	while (f.hasNext()) {
 		f.next();

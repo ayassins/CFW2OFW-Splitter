@@ -4,7 +4,6 @@
 #include <Qtcore/QDirIterator>
 #include <QtCore/qfile.h>
 #include <QtCore/qdir.h>
-#include <Qtcore/qDebug>
 
 class DIRSPLIT
 {
