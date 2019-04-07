@@ -25,6 +25,8 @@ bool PARAM::isparam() {
 
 
 bool PARAM::insert(key key, const QByteArray &data) {
+	if (!isparam())
+		return false;
 	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0) {
 		s.header.tables_entries += 1;
@@ -46,6 +48,8 @@ bool PARAM::insert(key key, const QByteArray &data) {
 
 
 bool PARAM::remove(key key) {
+	if (!isparam())
+		return false;
 	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0)
 		return false;
@@ -59,6 +63,8 @@ bool PARAM::remove(key key) {
 
 
 QByteArray PARAM::at(key key) {
+	if (!isparam())
+		return QByteArray();
 	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0)
 		return QByteArray();

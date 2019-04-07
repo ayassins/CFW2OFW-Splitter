@@ -7,11 +7,9 @@ class EBOOT
 public:
 	EBOOT(const QString & path);
 	~EBOOT();
-	bool isValidEboot();
+	bool iseboot();
 	QString Content_ID();
 private:
 	QFile f;
-	quint32 magic, header_version;
-	bool isValidSignature();
-	bool isValidVersion();
+	quint32 magic, version;
 };
