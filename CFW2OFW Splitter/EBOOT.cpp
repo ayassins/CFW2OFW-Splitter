@@ -5,6 +5,7 @@ EBOOT::EBOOT(const QString &path) {
 	f.setFileName(path);
 	f.open(QIODevice::ReadOnly);
 	QDataStream in(&f);
+	in.setByteOrder(QDataStream::BigEndian);
 	in >> magic >> version;
 }
 
@@ -20,8 +21,8 @@ bool EBOOT::iseboot() {
 
 
 QString EBOOT::Content_ID() {
-	if (!iseboot())
-		return QString();
+	//if (!iseboot())
+		//return QString();
 	QDataStream in(&f);
 	in.device()->seek(0x450);
 	QByteArray ContentID(0x24, '\0');

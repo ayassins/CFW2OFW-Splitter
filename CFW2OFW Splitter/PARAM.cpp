@@ -31,15 +31,15 @@ bool PARAM::insert(key key, const QByteArray &data) {
 	if (i < 0) {
 		s.header.tables_entries += 1;
 		SFO::index index;
-		index.data_fmt = 0x0402;
-		index.data_len = data.length();
+		index.data_fmt = 0x0204;
+		index.data_len = data.length() + 1;
 		index.data_max_len = data_max_len[key];
 		s.index_table << index;
 		s.key_table << key_name[key];
 		s.data_table << data;
 	}
 	else {
-		s.index_table[i].data_len = data.length();
+		s.index_table[i].data_len = data.length() + 1;
 		s.data_table[i] = data;
 	}
 	commit = true;

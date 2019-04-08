@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Toolbox v3 ---" << endl << "  -- a.yassin@msn.com --" << endl;
+	qDebug() << argv[1];
+	PKG(argv[1]).generate_debug_package();
 	QStringList gamedirs;
 	gamedirs << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
 	for each (QString gamedir in gamedirs) {

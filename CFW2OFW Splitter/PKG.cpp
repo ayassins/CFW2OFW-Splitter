@@ -7,7 +7,7 @@ PKG::PKG(const QString &path) : path(path) {
 
 
 PKG::~PKG() {
-	QDir().remove(package_conf);
+	//QDir().remove(package_conf);
 }
 
 
@@ -24,8 +24,9 @@ bool PKG::generate_debug_package() {
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())
 		return false;
-	if (!e.iseboot())
-		return false;
+	//if (!e.iseboot())
+		//return false;
+	qDebug() << "ok";
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
