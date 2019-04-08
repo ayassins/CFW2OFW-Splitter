@@ -31,9 +31,3 @@ QString EBOOT::Content_ID() {
 	ContentID.replace("SHIP0", "GAME0");
 	return ContentID;
 }
-
-
-//if (ContentID.contains("PATCH"))
-	//ContentID.replace(ContentID.indexOf("PATCH"), 0x5, "GAME0");
-//if (ContentID.contains("SHIP0"))
-	//ContentID.replace(ContentID.indexOf("SHIP0"), 0x5, "GAME0");

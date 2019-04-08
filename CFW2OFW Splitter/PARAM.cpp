@@ -16,6 +16,7 @@ PARAM::~PARAM() {
 		out << s;
 	}
 	f.close();
+	qDebug() << "f";
 }
 
 

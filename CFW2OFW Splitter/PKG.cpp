@@ -45,13 +45,13 @@ bool PKG::generate_debug_package() {
 		<< "InstallDirectory = " << Title_ID << endl
 		<< "PackageVersion = " << Version << endl;
 	QString Category = p.at(PARAM::CATEGORY);
-	p.insert(PARAM::TARGET_APP_VER, "00.01");
+	PARAM(path + "\\PARAM.SFO").insert(PARAM::TARGET_APP_VER, "00.01");
 	if (Category == "GD") {
 		out << "ContentType = GameData" << endl
 			<< "PackageType = DiscGamePatch" << endl;
 	}
 	else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT") {
-		p.insert(PARAM::APP_VER, "01.00");
+		PARAM(path + "\\PARAM.SFO").insert(PARAM::APP_VER, "01.00");
 		out << "ContentType = GameExec" << endl
 			<< "PackageType = HDDGamePatch" << endl;
 	}
@@ -59,6 +59,7 @@ bool PKG::generate_debug_package() {
 		return false;
 	f.close();
 	QProcess proc;
+	QString App_Ver = p.at(PARAM::APP_VER);
 	proc.setProcessChannelMode(QProcess::ForwardedChannels);
 	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << path);
 	if (!proc.waitForStarted())
@@ -67,7 +68,6 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
-	QString App_Ver = p.at(PARAM::APP_VER);
 	QString pkg_name = QDir::currentPath() + '\\' + Content_ID + "-A" + App_Ver.remove(2, 1) + "-V" + Version.remove(2, 1) + package_part_number + ".pkg";
 	if (!QDir().rename(QDir::currentPath() + '\\' + Content_ID + ".pkg", pkg_name))
 		return false;
