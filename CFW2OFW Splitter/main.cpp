@@ -11,8 +11,11 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Toolbox v3 ---" << endl << "  -- a.yassin@msn.com --" << endl;
-
-
+	QStringList gamedirs;
+	gamedirs << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
+	for each (QString gamedir in gamedirs) {
+		PKG(gamedir).generate_debug_package();
+	}
 	qDebug() << "Press any key to continue . . ."; getchar();
 	return false;
 }
