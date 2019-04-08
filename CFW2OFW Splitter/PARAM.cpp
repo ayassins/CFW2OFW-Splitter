@@ -37,7 +37,8 @@ bool PARAM::insert(key key, const QByteArray &data) {
 		s.index_table[i].data_len = data.length() + 1;
 		s.data_table[i] = data;
 	}
-	f.resize(0);
+	if (!f.resize(0))
+		return false;
 	QDataStream out(&f);
 	out << s;
 	if (!f.flush())
@@ -56,7 +57,8 @@ bool PARAM::remove(key key) {
 	s.index_table.remove(i);
 	s.key_table.remove(i);
 	s.data_table.remove(i);
-	f.resize(0);
+	if (!f.resize(0))
+		return false;
 	QDataStream out(&f);
 	out << s;
 	if (!f.flush())
