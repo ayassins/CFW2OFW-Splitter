@@ -89,7 +89,7 @@ bool PKG::generate_debug_package() {
 
 	//QStringList gamespaths;
 	//if (size > 0)
-		//gamespaths << DIRSPLIT(path, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", size).split();
+		//gamespaths << DIRSPLIT(path, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
 	//if (gamespaths.isEmpty())
 		//gamespaths << path;
 	//for each (QString path in gamespaths)
