@@ -12,17 +12,11 @@
 class PKG
 {
 public:
-	enum PkgType {
-		Debug ,
-		Han ,
-	};
-	PKG(const QString &path, PkgType type, qint64 size);
+	PKG(const QString &path);
 	~PKG();
-	bool generate_packages();
+	bool generate_debug_package();
 private:
 	QString path;
-	PkgType type;
-	qint64 size;
 	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
 	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
 	QString ps3xploit_rifgen_edatresign = QDir::currentPath() + "\\bin\\ps3xploit_rifgen_edatresign.exe";

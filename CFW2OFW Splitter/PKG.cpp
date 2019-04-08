@@ -2,7 +2,7 @@
 
 
 
-PKG::PKG(const QString &path, PkgType type, qint64 size) : path(path), type(type), size(size) {
+PKG::PKG(const QString &path) : path(path) {
 }
 
 
@@ -11,7 +11,7 @@ PKG::~PKG() {
 }
 
 
-bool PKG::generate_packages() {
+bool PKG::generate_debug_package() {
 	if (path.isEmpty())
 		return false;
 	if (path.endsWith('\\'))
