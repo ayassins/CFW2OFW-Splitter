@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
-	qDebug() << " --- CFW2OFW Splitter v3 ---" << endl << "  -- a.yassin@msn.com --" << endl;
+	qDebug() << " --- CFW2OFW Toolbox v3 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 
 
 	qDebug() << "Press any key to continue . . ."; getchar();
