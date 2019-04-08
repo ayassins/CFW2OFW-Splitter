@@ -23,7 +23,7 @@ QString EBOOT::Content_ID() {
 	if (!iseboot())
 		return QString();
 	QDataStream in(&f);
-	in.device()->seek(448);
+	in.device()->seek(0x450);
 	QByteArray ContentID(0x24, '\0');
 	in.readRawData(ContentID.data(), 0x24);
 	ContentID.replace("PATCH", "GAME0");
