@@ -27,6 +27,12 @@ bool PARAM::open(QFile::OpenMode flags) {
 }
 
 
+bool PARAM::close() {
+	flush();
+	f.close();
+}
+
+
 bool PARAM::flush() {
 	if (!f.resize(0))
 		return false;
@@ -35,12 +41,6 @@ bool PARAM::flush() {
 	if (!f.flush())
 		return false;
 	return true;
-}
-
-
-bool PARAM::close() {
-	flush();
-	f.close();
 }
 
 
