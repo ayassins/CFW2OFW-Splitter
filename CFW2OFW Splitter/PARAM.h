@@ -57,7 +57,6 @@ public:
 	~PARAM();
 	bool open(QFile::OpenMode flags);
 	bool close();
-	bool flush();
 	bool isparam();
 	bool insert(key key, const QByteArray & data);
 	bool remove(key key);
@@ -174,6 +173,7 @@ private:
 		0x008,
 		0x004
 	};
+	bool flush();
 };
 
 //ACCOUNT_ID					utf8 - S 					16 		(0x010)
