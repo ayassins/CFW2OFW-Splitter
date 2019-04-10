@@ -11,16 +11,19 @@ EBOOT::~EBOOT() {
 }
 
 
+bool EBOOT::iseboot() {
+	if ((magic != 0x53434500) && (version != 0x00000002))
+		return false;
+}
+
+
 bool EBOOT::open() {
 	if (!f.open(QFile::ReadOnly))
 		return false;
 	QDataStream in(&f);
 	in.setByteOrder(QDataStream::BigEndian);
-	quint32 magic, version;
 	in >> magic >> version;
-	if (magic != 0x53434500)
-		return false;
-	if (version != 0x02000000)
+	if (!iseboot())
 		return false;
 }
 
@@ -32,6 +35,8 @@ bool EBOOT::close() {
 
 QString EBOOT::Content_ID() {
 	if (!f.isOpen())
+		return false;
+	if (!iseboot())
 		return false;
 	QDataStream in(&f);
 	in.device()->seek(0x450);

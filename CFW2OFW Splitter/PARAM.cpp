@@ -12,7 +12,7 @@ PARAM::~PARAM() {
 
 
 bool PARAM::isparam() {
-	if ((s.header.magic != 0x00505346) && s.header.version != 0x01010000)
+	if ((s.header.magic != 0x00505346) && (s.header.version != 0x01010000))
 		return false;
 }
 
@@ -29,6 +29,17 @@ bool PARAM::open(QFile::OpenMode flags) {
 
 bool PARAM::close() {
 	f.close();
+}
+
+
+bool PARAM::flush() {
+	if (!f.resize(0))
+		return false;
+	QDataStream out(&f);
+	out << s;
+	if (!f.flush())
+		return false;
+	return true;
 }
 
 
@@ -52,15 +63,7 @@ bool PARAM::insert(key key, const QByteArray &data) {
 		s.index_table[i].data_len = data.length() + 1;
 		s.data_table[i] = data;
 	}
-	//
-	if (!f.resize(0))
-		return false;
-	QDataStream out(&f);
-	out << s;
-	if (!f.flush())
-		return false;
 	return true;
-	//
 }
 
 
@@ -76,12 +79,6 @@ bool PARAM::remove(key key) {
 	s.index_table.remove(i);
 	s.key_table.remove(i);
 	s.data_table.remove(i);
-	if (!f.resize(0))
-		return false;
-	QDataStream out(&f);
-	out << s;
-	if (!f.flush())
-		return false;
 	return true;
 }
 
