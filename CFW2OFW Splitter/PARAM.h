@@ -55,6 +55,8 @@ public:
 	};
 	PARAM(const QString &path);
 	~PARAM();
+	bool open(QFile::OpenMode flags);
+	bool close();
 	bool isparam();
 	bool insert(key key, const QByteArray & data);
 	bool remove(key key);

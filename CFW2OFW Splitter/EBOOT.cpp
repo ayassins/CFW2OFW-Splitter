@@ -31,6 +31,8 @@ bool EBOOT::close() {
 
 
 QString EBOOT::Content_ID() {
+	if (!f.isOpen())
+		return false;
 	QDataStream in(&f);
 	in.device()->seek(0x450);
 	QByteArray ContentID(0x24, '\0');
