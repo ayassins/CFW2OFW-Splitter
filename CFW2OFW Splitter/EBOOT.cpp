@@ -1,12 +1,8 @@
 #include "EBOOT.h"
 
 
-EBOOT::EBOOT(const QString &path) {
+EBOOT::EBOOT(const QString &path) :path(path) {
 	f.setFileName(path);
-	f.open(QIODevice::ReadOnly);
-	QDataStream in(&f);
-	in.setByteOrder(QDataStream::BigEndian);
-	in >> magic >> version;
 }
 
 
@@ -15,8 +11,26 @@ EBOOT::~EBOOT() {
 }
 
 
-bool EBOOT::iseboot() {
-	return ((magic == 0x53434500) && (version == 0x02000000));
+bool EBOOT::ismagic() {
+	return ((magic == 0x53434500));
+}
+
+
+bool EBOOT::isversion() {
+	return ((version == 0x02000000));
+}
+
+
+bool EBOOT::open(QFile::OpenMode flags) {
+	if (!f.open(flags))
+		return false;
+	QDataStream in(&f);
+	in.setByteOrder(QDataStream::BigEndian);
+	in >> magic >> version;
+	if (!ismagic())
+		return false;
+	if (!isversion())
+		return false;
 }
 
 
