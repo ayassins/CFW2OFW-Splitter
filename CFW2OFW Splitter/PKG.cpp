@@ -16,10 +16,10 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
-	if (!QFile::exists(path + "\\PARAM.SFO"))
-		return false;
-	if (!QFile::exists(path + "\\USRDIR\\EBOOT.BIN"))
-		return false;
+	//if (!QFile::exists(path + "\\PARAM.SFO"))
+		//return false;
+	//if (!QFile::exists(path + "\\USRDIR\\EBOOT.BIN"))
+		//return false;
 	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())

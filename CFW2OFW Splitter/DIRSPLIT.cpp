@@ -56,7 +56,7 @@ QStringList DIRSPLIT::split() {
 		if (!QFile(DestPath + f.filePath().mid(path.length())).exists())
 			return QStringList();
 	}
-	if (!QDir(path).removeRecursively())
-		return QStringList();
+	//if (!QDir(path).removeRecursively())
+		//return QStringList();
 	return splitteddirectorylist;
 }
