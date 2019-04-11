@@ -3,6 +3,9 @@
 
 PARAM::PARAM(const QString &path) {
 	f.setFileName(path);
+	f.open(QFile::ReadWrite);
+	QDataStream in(&f);
+	in >> s;
 }
 
 
@@ -17,29 +20,14 @@ bool PARAM::isparam() {
 }
 
 
-bool PARAM::open(QFile::OpenMode flags) {
-	if (!f.open(flags))
-		return false;
-	QDataStream in(&f);
-	in >> s;
-	if (!isparam())
-		return false;
-}
-
-
 bool PARAM::close() {
-	flush();
-	f.close();
-}
-
-
-bool PARAM::flush() {
 	if (!f.resize(0))
 		return false;
 	QDataStream out(&f);
 	out << s;
 	if (!f.flush())
 		return false;
+	f.close();
 	return true;
 }
 
