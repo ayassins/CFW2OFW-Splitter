@@ -15,6 +15,8 @@ PARAM::~PARAM() {
 
 
 bool PARAM::isparam() {
+	if (!f.isOpen())
+		return false;
 	if ((s.header.magic != 0x00505346) && (s.header.version != 0x01010000))
 		return false;
 }
@@ -74,7 +76,7 @@ bool PARAM::remove(key key) {
 
 QByteArray PARAM::at(key key) {
 	if (!f.isOpen())
-		return false;
+		return QByteArray();
 	if (!isparam())
 		return QByteArray();
 	int i = s.key_table.indexOf(key_name[key]);

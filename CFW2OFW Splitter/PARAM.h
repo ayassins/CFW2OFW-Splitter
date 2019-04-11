@@ -85,7 +85,6 @@ public:
 private:
 	SFO s;
 	QFile f;
-	bool commit;
 	QByteArray key_name[41] = {
 		"ACCOUNT_ID",
 		"ACCOUNTID",
