@@ -1,7 +1,6 @@
 #include "PKG.h"
 
 
-
 PKG::PKG(const QString &path) : path(path) {
 }
 
@@ -20,10 +19,11 @@ bool PKG::generate_debug_package() {
 		//return false;
 	//if (!QFile::exists(path + "\\USRDIR\\EBOOT.BIN"))
 		//return false;
-	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())
 		return false;
+
+	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");
 	//if (!e.iseboot())
 		//return false;
 	qDebug() << "ok";

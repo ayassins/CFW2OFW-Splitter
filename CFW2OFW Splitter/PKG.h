@@ -19,5 +19,5 @@ private:
 	QString path;
 	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
 	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
-	QString ps3xploit_rifgen_edatresign = QDir::currentPath() + "\\bin\\ps3xploit_rifgen_edatresign.exe";
+	//QString ps3xploit_rifgen_edatresign = QDir::currentPath() + "\\bin\\ps3xploit_rifgen_edatresign.exe";
 };
