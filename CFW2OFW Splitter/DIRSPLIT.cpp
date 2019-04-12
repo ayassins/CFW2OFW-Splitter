@@ -9,27 +9,22 @@ DIRSPLIT::~DIRSPLIT() {
 }
 
 
-bool DIRSPLIT::cansplit() {
-	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
-	qint64 totalsize = 0;
-	while (f.hasNext()) {
-		f.next();
-		if (f.fileInfo().size() > size)
-			return false;
-		totalsize += f.fileInfo().size();
-	}
-	if (totalsize < size)
-		return false;
-	return true;
-}
-
-
 QStringList DIRSPLIT::split() {
-	if (!cansplit())
-		return QStringList();
+	QStringList splitteddirectorylist;
+	{
+		QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
+		qint64 totalsize = 0;
+		while (f.hasNext()) {
+			f.next();
+			if (f.fileInfo().size() > size)
+				return QStringList();
+			totalsize += f.fileInfo().size();
+		}
+		if (totalsize < size)
+			return splitteddirectorylist << path;
+	}
 	for each (const QString &primaryfile in primaryfiles)
 		size -= QFile(path + QDir::separator() + primaryfile).size();
-	QStringList splitteddirectorylist;
 	qint64 leftSpace = size;
 	int part_number = 1;
 	QDirIterator f(path, QDir::Files, QDirIterator::Subdirectories);
