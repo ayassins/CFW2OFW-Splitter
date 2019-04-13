@@ -11,14 +11,19 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 	qDebug() << " --- CFW2OFW Toolbox v3 ---" << endl << "  -- a.yassin@msn.com --" << endl;
-	qDebug() << argv[1];
-	PKG(argv[1]).generate_debug_package();
-	//QStringList gamedirs;
-	//gamedirs << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
-	//for each (QString gamedir in gamedirs) {
-	//	PKG(gamedir).generate_debug_package();
-	//}
-	qDebug() << "Press any key to continue . . ."; getchar();
+	if (argc < 2)
+		qDebug() << "drag and drop directory BL?????? or BC?????? or NP??????.";
+	else {
+		QStringList gamespaths;
+		gamespaths << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
+		if (!gamespaths.isEmpty())
+			for each (QString path in gamespaths)
+				if(!PKG(path).generate_debug_package())
+					qDebug() << "couldn't generate game package!.";
+		else
+			qDebug() << "couldn't split game directory!.";
+	}
+	qDebug() << " Press any key to continue . . ."; getchar();
 	return false;
 }
 
@@ -33,19 +38,6 @@ int main(int argc, char *argv[])
 	///if (!QDir().remove(pkg_name))
 		//return false;
 //}
-
-
-	//QStringList gamespaths;
-	//if (size > 0)
-		//gamespaths << DIRSPLIT(path, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
-	//if (gamespaths.isEmpty())
-		//gamespaths << path;
-	//for each (QString path in gamespaths)
-	//{
-		//if (path.endsWith('\\'))
-			//path.remove(path.size() - 1, 1);
-
-
 
 //
 //QStringList dirs(a.arguments());
