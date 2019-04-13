@@ -10,7 +10,6 @@ PARAM::PARAM(const QString &path) {
 
 
 PARAM::~PARAM() {
-	close();
 }
 
 
@@ -19,10 +18,13 @@ bool PARAM::isparam() {
 		return false;
 	if ((s.header.magic != 0x00505346) && (s.header.version != 0x01010000))
 		return false;
+	return true;
 }
 
 
 bool PARAM::close() {
+	if (!f.isOpen())
+		return false;
 	if (!f.resize(0))
 		return false;
 	QDataStream out(&f);

@@ -15,49 +15,61 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
-	//if (!QFile::exists(path + "\\PARAM.SFO"))
-		//return false;
-	//if (!QFile::exists(path + "\\USRDIR\\EBOOT.BIN"))
-		//return false;
+	QString title_id = path.mid(1 + path.lastIndexOf(QChar('\\')));
+	if (!title_id.startsWith("BL"))
+		if (!title_id.startsWith("BC"))
+			if (!title_id.startsWith("NP"))
+				return false;
+	if (!QFile::exists(path + "\\PARAM.SFO"))
+		return false;
+	if (!QFile::exists(path + "\\USRDIR\\EBOOT.BIN"))
+		return false;
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())
 		return false;
-	QString Version = p.at(PARAM::VERSION);
-	QString App_Ver = p.at(PARAM::APP_VER);
-	QString Category = p.at(PARAM::CATEGORY);
+	QString version = p.at(PARAM::VERSION);
+	QString app_ver = p.at(PARAM::APP_VER);
+	QString category = p.at(PARAM::CATEGORY);
+	if (version.isEmpty())
+		return false;
+	if (app_ver.isEmpty())
+		return false;
+	if (category.isEmpty())
+		return false;
 	if(!p.insert(PARAM::TARGET_APP_VER, "00.01"))
 		return false;
-	if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT")
+	if (category == "DG" || category == "HG" || category == "HD" || category == "AT")
 		if (!p.insert(PARAM::APP_VER, "01.00"))
 			return false;
 	if (!p.close())
 		return false;
 	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");
-	//if (!e.iseboot())
-		//return false;
-	QString Content_ID = e.Content_ID();
+	if (!e.iseboot())
+		return false;
+	QString content_id = e.Content_ID();
+	if (content_id.isEmpty())
+		return false;
 	if (!e.close())
 		return false;
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
-	QString package_part_number;
-	QString Title_ID = path.mid(1 + path.lastIndexOf(QChar('\\')));
-	if (Title_ID.contains(QChar('_'))) {
-		package_part_number = ".part" + Title_ID.right(1);
-		Title_ID.remove(Title_ID.indexOf(QChar('_')), 2);
+	QString part_number;
+	if (title_id.contains(QChar('_'))) {
+		part_number = ".part" + title_id.mid(1 + title_id.lastIndexOf(QChar('_')));
+		title_id = title_id.left(title_id.lastIndexOf(QChar('_')));
 	}
 	QTextStream out(&f);
-	out << "ContentID = " << Content_ID << endl
+	out << "ContentID = " << content_id << endl
 		<< "Klicensee = 0x00000000000000000000000000000000" << endl
 		<< "DRMType = Free" << endl
-		<< "InstallDirectory = " << Title_ID << endl
-		<< "PackageVersion = " << Version << endl;
-	if (Category == "GD") {
+		<< "InstallDirectory = " << title_id << endl
+		<< "PackageVersion = " << version << endl;
+	if (category == "GD") {
 		out << "ContentType = GameData" << endl
 			<< "PackageType = DiscGamePatch" << endl;
 	}
-	else if (Category == "DG" || Category == "HG" || Category == "HD" || Category == "AT") {
+	else if (category == "DG" || category == "HG" || category == "HD" || category == "AT") {
 		out << "ContentType = GameExec" << endl
 			<< "PackageType = HDDGamePatch" << endl;
 	}
@@ -73,34 +85,8 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
-	App_Ver.remove(2, 1);
-	Version.remove(2, 1);
-	QString pkg_name = QDir::currentPath() + '\\' + Content_ID + "-A" + App_Ver + "-V" + Version + package_part_number + ".pkg";
-	if (!QDir().rename(QDir::currentPath() + '\\' + Content_ID + "-A" + App_Ver + "-V" + Version + ".pkg", pkg_name))
+	QString pkg_name = QDir::currentPath() + '\\' + content_id + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+	if (!QDir().rename(pkg_name + ".pkg", pkg_name + part_number + ".pkg"))
 		return false;
 	return true;
 }
-
-
-//if (type == Han) {
-	//proc.start(ps3xploit_rifgen_edatresign, QStringList() << pkg_name);
-	//if (!proc.waitForStarted())
-		//return false;
-	//if (!proc.waitForFinished(-1))
-		//return false;
-	//if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
-		//return false;
-	///if (!QDir().remove(pkg_name))
-		//return false;
-//}
-
-
-	//QStringList gamespaths;
-	//if (size > 0)
-		//gamespaths << DIRSPLIT(path, QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
-	//if (gamespaths.isEmpty())
-		//gamespaths << path;
-	//for each (QString path in gamespaths)
-	//{
-		//if (path.endsWith('\\'))
-			//path.remove(path.size() - 1, 1);

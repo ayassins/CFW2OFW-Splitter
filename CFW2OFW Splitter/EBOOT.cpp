@@ -11,19 +11,19 @@ EBOOT::EBOOT(const QString &path) {
 
 
 EBOOT::~EBOOT() {
-	close();
 }
 
 
 bool EBOOT::iseboot() {
-	if (!f.isOpen())
-		return false;
 	if ((magic != 0x53434500) && (version != 0x00000002))
 		return false;
+	return true;
 }
 
 
 bool EBOOT::close() {
+	if (!f.isOpen())
+		return false;
 	f.close();
 	return true;
 }
