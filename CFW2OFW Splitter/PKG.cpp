@@ -6,7 +6,7 @@ PKG::PKG(const QString &path) : path(path) {
 
 
 PKG::~PKG() {
-	//QDir().remove(package_conf);
+	QDir().remove(package_conf);
 }
 
 
