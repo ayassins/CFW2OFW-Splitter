@@ -9,7 +9,7 @@ public:
 	~EBOOT();
 	bool iseboot();
 	bool close();
-	QString Content_ID();
+	QByteArray contentid();
 private:
 	QFile f;
 	quint32 magic, version;

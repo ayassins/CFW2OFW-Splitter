@@ -2,10 +2,14 @@
 
 
 PARAM::PARAM(const QString &path) {
-	f.setFileName(path);
-	f.open(QFile::ReadWrite);
-	QDataStream in(&f);
-	in >> s;
+	try {
+		f.setFileName(path);
+		f.open(QFile::ReadWrite);
+		QDataStream in(&f);
+		in >> s;
+	}
+	catch (...) {
+	}
 }
 
 
@@ -14,16 +18,15 @@ PARAM::~PARAM() {
 
 
 bool PARAM::isparam() {
-	if (!f.isOpen())
-		return false;
-	if ((s.header.magic != 0x00505346) && (s.header.version != 0x01010000))
-		return false;
-	return true;
+	if (f.isOpen())
+		if ((s.header.magic == 0x00505346) && (s.header.version == 0x01010000))
+			return true;
+	return false;
 }
 
 
 bool PARAM::close() {
-	if (!f.isOpen())
+	if (!isparam())
 		return false;
 	if (!f.resize(0))
 		return false;
@@ -37,8 +40,6 @@ bool PARAM::close() {
 
 
 bool PARAM::insert(key key, const QByteArray &data) {
-	if (!f.isOpen())
-		return false;
 	if (!isparam())
 		return false;
 	int i = s.key_table.indexOf(key_name[key]);
@@ -61,8 +62,6 @@ bool PARAM::insert(key key, const QByteArray &data) {
 
 
 bool PARAM::remove(key key) {
-	if (!f.isOpen())
-		return false;
 	if (!isparam())
 		return false;
 	int i = s.key_table.indexOf(key_name[key]);
@@ -77,8 +76,6 @@ bool PARAM::remove(key key) {
 
 
 QByteArray PARAM::at(key key) {
-	if (!f.isOpen())
-		return QByteArray();
 	if (!isparam())
 		return QByteArray();
 	int i = s.key_table.indexOf(key_name[key]);
