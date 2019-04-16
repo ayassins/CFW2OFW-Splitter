@@ -14,6 +14,8 @@ PARAM::PARAM(const QString &path) {
 
 
 PARAM::~PARAM() {
+	if (f.isOpen())
+		f.close();
 }
 
 

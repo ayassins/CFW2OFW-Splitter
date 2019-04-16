@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="DIRSPLIT.cpp" />
     <ClCompile Include="EBOOT.cpp" />
+    <ClCompile Include="EDAT.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PARAM.cpp" />
     <ClCompile Include="PKG.cpp" />
@@ -102,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="DIRSPLIT.h" />
     <ClInclude Include="EBOOT.h" />
+    <ClInclude Include="EDAT.h" />
     <ClInclude Include="PARAM.h" />
     <ClInclude Include="PKG.h" />
   </ItemGroup>

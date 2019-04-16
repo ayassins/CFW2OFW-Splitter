@@ -42,7 +42,7 @@ bool PKG::generate_debug_package() {
 	}
 	if (target_app_ver.isEmpty() || target_app_ver != "00.01") {
 		target_app_ver = "00.01";
-		p.insert(PARAM::APP_VER, target_app_ver);
+		p.insert(PARAM::TARGET_APP_VER, target_app_ver);
 	}
 	if (category.isEmpty())
 		return false;

@@ -3,15 +3,16 @@
 #include <QtCore/qdatastream.h>
 
 
-class EBOOT
+class EDAT
 {
 public:
-	EBOOT(const QString & path);
-	~EBOOT();
-	bool iseboot();
+	EDAT(const QString & path);
+	~EDAT();
+	bool isedat();
 	bool close();
 	QByteArray contentid();
 private:
 	QFile f;
 	quint32 magic, version;
 };
+
