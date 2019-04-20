@@ -67,7 +67,7 @@ bool PKG::generate_debug_package() {
 		packagetype = "HDDGamePatch";
 	}
 	else if (category == "GD") {
-		contenttype = "Game_Data";
+		contenttype = "GameData";
 		packagetype = "DiscGamePatch";
 	}
 	else if (category == "AP") {
