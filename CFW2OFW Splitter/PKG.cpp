@@ -31,7 +31,7 @@ bool PKG::generate_debug_package() {
 	QByteArray version = p.at(PARAM::VERSION);
 	QByteArray app_ver = p.at(PARAM::APP_VER);
 	QByteArray target_app_ver = p.at(PARAM::CATEGORY);
-	QByteArray category = p.at(PARAM::CATEGORY);
+	QByteArray cat = p.at(PARAM::CATEGORY);
 	if (version.isEmpty()) {
 		version = "01.00";
 		p.insert(PARAM::VERSION, version);
@@ -44,77 +44,32 @@ bool PKG::generate_debug_package() {
 		target_app_ver = "00.01";
 		p.insert(PARAM::TARGET_APP_VER, target_app_ver);
 	}
-	if (category.isEmpty())
-		return false;
-	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");	//	"0x00000000000000000000000000000000"
-	if (!e.iseboot())
+	if (cat.isEmpty())
 		return false;
 	QByteArray contentid, klicensee, drmtype, contenttype, packagetype;
-	contentid = e.contentid();
-	if (contentid.isEmpty())
-		return false;
-	if (category == "HD") {
-		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
-	}
-	else if (category == "HG") {
-		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
-	}
-	else if (category == "DG") {
+	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AV" || cat == "AT") {
 		p.insert(PARAM::APP_VER, "01.00");
+		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
+		klicensee = "0x00000000000000000000000000000000";
+		drmtype = "Free";
 		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
 	}
-	else if (category == "GD") {
-		contenttype = "GameData";
-		packagetype = "DiscGamePatch";
-	}
-	else if (category == "AP") {
+	else if (cat == "GD") {
+		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
+		klicensee = "0x00000000000000000000000000000000";
+		drmtype = "Free";
 		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
-	}
-	else if (category == "AM") {
-		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
-	}
-	else if (category == "AV") {
-		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
-	}
-	else if (category == "AT") {
-		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
-	}
-	else if (category == "2G") {
-		//set EDT = ISO.BIN.EDAT;
-		contenttype = "Game_Data";
-	}
-	else if (category == "2P") {
-		//set EDT = "ISO.BIN.EDAT";
-		contenttype = "GameData";
-	}
-	else if (category == "2D") {
-		//set EDT = ISO.BIN.EDAT;
-		contenttype = "GameData";
-	}
-	else if (category == "1P") {
-		//set EDT = ISO.BIN.EDAT;
-		contenttype = "GameData";
-	}
-	else if (category == "MN") {
-		//set EDT = ISO.BIN.EDAT;
-		contenttype = "minis";
-	}
-	else if (category == "PE") {
-		//set EDT = ISO.BIN.EDAT;
-		contenttype = "GameData";
-	}
-	else if (category == "PP") {
-		//set EDT = ISO.BIN.EDAT;
+		packagetype = "DiscGamePatch";	}
+	else if (cat == "2G" || cat == "2P" || cat == "2D" || cat == "1P" || cat == "MN" || cat == "PE" || cat == "PP") {
+		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
+		klicensee = "0x72F990788F9CFF745725F08E4C128387";
+		drmtype = "Local";
 		contenttype = "GameData";
 	}
 	else
+		return false;
+	if (contentid.isEmpty())
 		return false;
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
@@ -128,8 +83,6 @@ bool PKG::generate_debug_package() {
 		<< "ContentType = " << contenttype << endl
 		<< "PackageType = " << packagetype << endl;
 	if (!p.close())
-		return false;
-	if (!e.close())
 		return false;
 	f.close();
 	QProcess proc;

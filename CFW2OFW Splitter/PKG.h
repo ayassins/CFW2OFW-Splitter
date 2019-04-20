@@ -6,6 +6,7 @@
 #include <QtCore/qdir.h>
 #include "PARAM.h"
 #include "EBOOT.h"
+#include "EDAT.h"
 #include "DIRSPLIT.h"
 #include <QtCore/qdebug>
 
