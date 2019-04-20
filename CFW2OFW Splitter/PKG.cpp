@@ -46,7 +46,7 @@ bool PKG::generate_debug_package() {
 	}
 	if (category.isEmpty())
 		return false;
-	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");	//	"0x00000000000000000000000000000000""Free"// || category == "HG" || category == "HD" || category == "AT") {
+	EBOOT e(path + "\\USRDIR\\EBOOT.BIN");	//	"0x00000000000000000000000000000000"
 	if (!e.iseboot())
 		return false;
 	QByteArray contentid, klicensee, drmtype, contenttype, packagetype;
@@ -54,15 +54,16 @@ bool PKG::generate_debug_package() {
 	if (contentid.isEmpty())
 		return false;
 	if (category == "HD") {
-		contenttype = "Game_Exec";
+		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
 	}
 	else if (category == "HG") {
-		contenttype = "Game_Exec";
+		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
 	}
 	else if (category == "DG") {
-		contenttype = "Game_Exec";
+		p.insert(PARAM::APP_VER, "01.00");
+		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
 	}
 	else if (category == "GD") {
@@ -70,74 +71,51 @@ bool PKG::generate_debug_package() {
 		packagetype = "DiscGamePatch";
 	}
 	else if (category == "AP") {
-		contenttype = "Game_Exec";
+		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
 	}
 	else if (category == "AM") {
-		contenttype = "Game_Exec";
-		packagetype = HDDGamePatch;
+		contenttype = "GameExec";
+		packagetype = "HDDGamePatch";
 	}
-	else if (category == AV) {
-		contenttype = Game_Exec;
-		packagetype = HDDGamePatch;
+	else if (category == "AV") {
+		contenttype = "GameExec";
+		packagetype = "HDDGamePatch";
 	}
-	else if (category == AT) {
-		contenttype = Game_Exec;
-		packagetype = HDDGamePatch;
+	else if (category == "AT") {
+		contenttype = "GameExec";
+		packagetype = "HDDGamePatch";
 	}
-	else if (category == 2G) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = Game_Data;
+	else if (category == "2G") {
+		//set EDT = ISO.BIN.EDAT;
+		contenttype = "Game_Data";
 	}
-	else if (category == 2P) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = Game_Data;
+	else if (category == "2P") {
+		//set EDT = "ISO.BIN.EDAT";
+		contenttype = "GameData";
 	}
-	else if (category == 2D) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = Game_Data;
+	else if (category == "2D") {
+		//set EDT = ISO.BIN.EDAT;
+		contenttype = "GameData";
 	}
-	else if (category == 1P) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = Game_Data;
+	else if (category == "1P") {
+		//set EDT = ISO.BIN.EDAT;
+		contenttype = "GameData";
 	}
-	else if (category == MN) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = minis;
-		set n1 = 1MNCAT;
-		set title = PSPMINIS000000!ch!;
+	else if (category == "MN") {
+		//set EDT = ISO.BIN.EDAT;
+		contenttype = "minis";
 	}
-	else if (category == PE) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = Game_Data;
-		set n1 = 1PECAT;
-		set title = PSPREMASTERS00!ch!;
+	else if (category == "PE") {
+		//set EDT = ISO.BIN.EDAT;
+		contenttype = "GameData";
 	}
-	else if (category == PP) {
-		set EDT = ISO.BIN.EDAT;
-		contenttype = Game_Data;
-		set n1 = 1PPCAT;
-		set title = PSPGAME0000000!ch!;
+	else if (category == "PP") {
+		//set EDT = ISO.BIN.EDAT;
+		contenttype = "GameData";
 	}
-	}
-
-	//if (category == "GD") {
-	//	contenttype = "GameData";
-	//	packagetype = "DiscGamePatch";
-	//}
-	//else if (category == "DG") {
-	//	p.insert(PARAM::APP_VER, "01.00");
-	//	contenttype = "GameExec";
-	//	packagetype = "HDDGamePatch";
-	//}
-	//else if (category == "2P") {
-
-	//}
-	//else if (category == "1P") {
-
-	//}
-	//else
-	//	return false;
+	else
+		return false;
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
@@ -167,5 +145,4 @@ bool PKG::generate_debug_package() {
 	if (!QDir().rename(pkg_name + ".pkg", pkg_name + part_number + ".pkg"))
 		return false;
 	return true;
-	}
-	
+}
