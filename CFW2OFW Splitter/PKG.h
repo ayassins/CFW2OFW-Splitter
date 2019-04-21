@@ -13,11 +13,11 @@
 class PKG
 {
 public:
-	PKG(const QByteArray &path);
+	PKG(const QString &path);
 	~PKG();
 	bool generate_debug_package();
 private:
-	QByteArray path;
+	QString path;
 	QString package_conf = QDir::currentPath() + "\\bin\\package.conf";
 	QString psn_package_npdrm = QDir::currentPath() + "\\bin\\psn_package_npdrm.exe";
 	//QString ps3xploit_rifgen_edatresign = QDir::currentPath() + "\\bin\\ps3xploit_rifgen_edatresign.exe";

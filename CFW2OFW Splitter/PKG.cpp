@@ -1,26 +1,26 @@
 #include "PKG.h"
 
 
-PKG::PKG(const QByteArray &path) : path(path) {
+PKG::PKG(const QString &path) : path(path) {
 }
 
 
 PKG::~PKG() {
-	QDir().remove(package_conf);
+	//QDir().remove(package_conf);
 }
 
 
 bool PKG::generate_debug_package() {
+	QByteArray title_id, part_number, version, app_ver, cat, contentid, klicensee, drmtype, contenttype, packagetype;
 	if (path.isEmpty())
 		return false;
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
-	QByteArray title_id = path.mid(1 + path.lastIndexOf('\\'));
+	title_id = path.mid(1 + path.lastIndexOf('\\')).toLocal8Bit();
 	if (!title_id.startsWith("BL"))
 		if (!title_id.startsWith("BC"))
 			if (!title_id.startsWith("NP"))
 				return false;
-	QByteArray part_number;
 	if (title_id.contains('_')) {
 		title_id = title_id.left(title_id.lastIndexOf('_'));
 		part_number = ".part" + title_id.mid(1 + title_id.lastIndexOf('_'));
@@ -28,27 +28,22 @@ bool PKG::generate_debug_package() {
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())
 		return false;
-	QByteArray version = p.at(PARAM::VERSION);
-	QByteArray app_ver = p.at(PARAM::APP_VER);
-	QByteArray target_app_ver = p.at(PARAM::CATEGORY);
-	QByteArray cat = p.at(PARAM::CATEGORY);
+	version = p.at(PARAM::VERSION);
 	if (version.isEmpty()) {
 		version = "01.00";
 		p.insert(PARAM::VERSION, version);
 	}
+	app_ver = p.at(PARAM::APP_VER);
 	if (app_ver.isEmpty()) {
 		app_ver = "01.00";
-		p.insert(PARAM::APP_VER, app_ver);
+		p.insert(PARAM::VERSION, app_ver);
 	}
-	if (target_app_ver.isEmpty() || target_app_ver != "00.01") {
-		target_app_ver = "00.01";
-		p.insert(PARAM::TARGET_APP_VER, target_app_ver);
-	}
+	cat = p.at(PARAM::CATEGORY);
 	if (cat.isEmpty())
 		return false;
-	QByteArray contentid, klicensee, drmtype, contenttype, packagetype;
 	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AV" || cat == "AT") {
-		p.insert(PARAM::APP_VER, "01.00");
+		p.insert(PARAM::TARGET_APP_VER, "00.01");
+		p.insert(PARAM::APP_VER, app_ver);
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		klicensee = "0x00000000000000000000000000000000";
 		drmtype = "Free";
@@ -56,11 +51,13 @@ bool PKG::generate_debug_package() {
 		packagetype = "HDDGamePatch";
 	}
 	else if (cat == "GD") {
+		p.insert(PARAM::TARGET_APP_VER, "00.01");
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		klicensee = "0x00000000000000000000000000000000";
 		drmtype = "Free";
 		contenttype = "GameExec";
-		packagetype = "DiscGamePatch";	}
+		packagetype = "DiscGamePatch";
+	}
 	else if (cat == "2G" || cat == "2P" || cat == "2D" || cat == "1P" || cat == "MN" || cat == "PE" || cat == "PP") {
 		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
 		klicensee = "0x72F990788F9CFF745725F08E4C128387";
