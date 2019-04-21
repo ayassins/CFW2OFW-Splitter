@@ -43,7 +43,7 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AV" || cat == "AT") {
 		p.insert(PARAM::TARGET_APP_VER, "00.01");
-		p.insert(PARAM::APP_VER, app_ver);
+		p.insert(PARAM::APP_VER, "01.00");
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		klicensee = "0x00000000000000000000000000000000";
 		drmtype = "Free";
@@ -76,9 +76,9 @@ bool PKG::generate_debug_package() {
 		<< "Klicensee = " << klicensee << endl
 		<< "DRMType = " << drmtype << endl
 		<< "InstallDirectory = " << title_id << endl
-		<< "PackageVersion = " << version << endl
 		<< "ContentType = " << contenttype << endl
-		<< "PackageType = " << packagetype << endl;
+		<< "PackageType = " << packagetype << endl
+		<< "PackageVersion = " << version << endl;
 	if (!p.close())
 		return false;
 	f.close();
