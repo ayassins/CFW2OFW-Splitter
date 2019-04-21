@@ -15,15 +15,19 @@ EDAT::EDAT(const QString & path) {
 
 
 EDAT::~EDAT() {
-	if (f.isOpen())
-		f.close();
+	close();
 }
 
 
 bool EDAT::isedat() {
-	if (f.isOpen())
-		if ((magic == 0x53434500) && (version == 0x00000002))
-			return true;
+	try {
+		if (f.isOpen())
+			//if ((magic == 0x53434500) && (version == 0x00000002))
+				return true;
+	}
+	catch (...) {
+		return false;
+	}
 	return false;
 }
 
@@ -37,12 +41,17 @@ bool EDAT::close() {
 
 
 QByteArray EDAT::contentid() {
-	if (!isedat())
+	//if (!isedat())
+		//return QByteArray();
+	try {
+		QDataStream in(&f);
+		in.device()->seek(0x10);
+		QByteArray ContentID(0x24, '\0');
+		if (in.readRawData(ContentID.data(), 0x24) == 0x24)
+			return ContentID;
+	}
+	catch (...) {
 		return QByteArray();
-	QDataStream in(&f);
-	in.device()->seek(0x10);
-	QByteArray ContentID(0x24, '\0');
-	if (in.readRawData(ContentID.data(), 0x24) == 0x24)
-		return ContentID.replace("PATCH", "GAME0").replace("SHIP0", "GAME0");
+	}
 	return QByteArray();
 }

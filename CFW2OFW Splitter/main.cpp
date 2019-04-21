@@ -18,8 +18,11 @@ int main(int argc, char *argv[])
 		gamespaths << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
 		if (!gamespaths.isEmpty())
 			for each (QString path in gamespaths)
-				if(!PKG(path).generate_debug_package())
+			{
+				qDebug() << path;
+				if (!PKG(path).generate_debug_package())
 					qDebug() << "couldn't generate game package!.";
+			}
 		else
 			qDebug() << "couldn't split game directory!.";
 	}

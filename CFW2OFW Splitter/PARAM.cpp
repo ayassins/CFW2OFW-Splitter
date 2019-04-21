@@ -14,29 +14,38 @@ PARAM::PARAM(const QString &path) {
 
 
 PARAM::~PARAM() {
-	if (f.isOpen())
-		f.close();
+	close();
 }
 
 
 bool PARAM::isparam() {
-	if (f.isOpen())
-		if ((s.header.magic == 0x00505346) && (s.header.version == 0x01010000))
-			return true;
+	try {
+		if (f.isOpen())
+			if ((s.header.magic == 0x00505346) && (s.header.version == 0x01010000))
+				return true;
+	}
+	catch (...){
+		return false;
+	}
 	return false;
 }
 
 
 bool PARAM::close() {
-	if (!isparam())
+	try {
+		if (!isparam())
+			return false;
+		if (!f.resize(0))
+			return false;
+		QDataStream out(&f);
+		out << s;
+		if (!f.flush())
+			return false;
+		f.close();
+	}
+	catch (...) {
 		return false;
-	if (!f.resize(0))
-		return false;
-	QDataStream out(&f);
-	out << s;
-	if (!f.flush())
-		return false;
-	f.close();
+	}
 	return true;
 }
 
@@ -83,7 +92,7 @@ QByteArray PARAM::at(key key) {
 	int i = s.key_table.indexOf(key_name[key]);
 	if (i < 0)
 		return QByteArray();
-	return s.data_table[i];
+	return s.data_table[i].left(s.index_table[i].data_len - 1);
 }
 
 

@@ -15,15 +15,19 @@ EBOOT::EBOOT(const QString &path) {
 
 
 EBOOT::~EBOOT() {
-	if (f.isOpen())
-		f.close();
+	close();
 }
 
 
 bool EBOOT::iseboot() {
-	if (f.isOpen())
-		if ((magic == 0x53434500) && (version == 0x00000002))
-			return true;
+	try{
+		if (f.isOpen())
+			if ((magic == 0x53434500) && (version == 0x00000002))
+				return true;
+	}
+	catch (...){
+		return false;
+	}
 	return false;
 }
 
@@ -39,10 +43,15 @@ bool EBOOT::close() {
 QByteArray EBOOT::contentid() {
 	if (!iseboot())
 		return QByteArray();
-	QDataStream in(&f);
-	in.device()->seek(0x450);
-	QByteArray ContentID(0x24, '\0');
-	if (in.readRawData(ContentID.data(), 0x24) == 0x24)
-		return ContentID.replace("PATCH", "GAME0").replace("SHIP0", "GAME0");
-	 return QByteArray();
+	try {
+		QDataStream in(&f);
+		in.device()->seek(0x450);
+		QByteArray ContentID(0x24, '\0');
+		if (in.readRawData(ContentID.data(), 0x24) == 0x24)
+			return ContentID.replace("PATCH", "GAME0").replace("SHIP0", "GAME0");
+	}
+	catch (...) {
+		return QByteArray();
+	}
+	return QByteArray();
 }

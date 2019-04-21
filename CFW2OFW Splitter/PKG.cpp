@@ -20,7 +20,8 @@ bool PKG::generate_debug_package() {
 	if (!title_id.startsWith("BL"))
 		if (!title_id.startsWith("BC"))
 			if (!title_id.startsWith("NP"))
-				return false;
+				if (!title_id.startsWith("SL"))
+					return false;
 	if (title_id.contains('_')) {
 		title_id = title_id.left(title_id.lastIndexOf('_'));
 		part_number = ".part" + title_id.mid(1 + title_id.lastIndexOf('_'));
@@ -66,8 +67,10 @@ bool PKG::generate_debug_package() {
 	}
 	else
 		return false;
+	qDebug() << "PASS"<< contentid;
 	if (contentid.isEmpty())
 		return false;
+
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
