@@ -11,7 +11,8 @@ PKG::~PKG() {
 
 
 bool PKG::generate_debug_package() {
-	QByteArray title_id, part_number, version, app_ver, cat, contentid, klicensee, drmtype, contenttype, packagetype;
+	QByteArray title_id, part_number, version, app_ver, cat, contentid, klicensee, drmtype, contenttype, packagetype, packageversion;
+	QString packagename;
 	if (path.isEmpty())
 		return false;
 	if (path.endsWith('\\'))
@@ -34,43 +35,45 @@ bool PKG::generate_debug_package() {
 		version = "01.00";
 		p.insert(PARAM::VERSION, version);
 	}
-	app_ver = p.at(PARAM::APP_VER);
-	if (app_ver.isEmpty()) {
-		app_ver = "01.00";
-		p.insert(PARAM::VERSION, app_ver);
-	}
 	cat = p.at(PARAM::CATEGORY);
 	if (cat.isEmpty())
 		return false;
 	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AV" || cat == "AT") {
+		app_ver = "01.00";
+		p.insert(PARAM::APP_VER, app_ver);
 		p.insert(PARAM::TARGET_APP_VER, "00.01");
-		p.insert(PARAM::APP_VER, "01.00");
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		klicensee = "0x00000000000000000000000000000000";
 		drmtype = "Free";
 		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
+		packageversion = version;
+		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
 	}
 	else if (cat == "GD") {
+		app_ver = p.at(PARAM::APP_VER);
 		p.insert(PARAM::TARGET_APP_VER, "00.01");
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		klicensee = "0x00000000000000000000000000000000";
 		drmtype = "Free";
 		contenttype = "GameExec";
 		packagetype = "DiscGamePatch";
+		packageversion = version;
+		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
 	}
 	else if (cat == "2G" || cat == "2P" || cat == "2D" || cat == "1P" || cat == "MN" || cat == "PE" || cat == "PP") {
+		app_ver = "01.00";
 		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
 		klicensee = "0x72F990788F9CFF745725F08E4C128387";
 		drmtype = "Local";
 		contenttype = "GameData";
+		packageversion = version;
+		packagename = contentid;
 	}
 	else
 		return false;
-	qDebug() << "PASS"<< contentid;
 	if (contentid.isEmpty())
 		return false;
-
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
 		return false;
@@ -81,7 +84,7 @@ bool PKG::generate_debug_package() {
 		<< "InstallDirectory = " << title_id << endl
 		<< "ContentType = " << contenttype << endl
 		<< "PackageType = " << packagetype << endl
-		<< "PackageVersion = " << version << endl;
+		<< "PackageVersion = " << packageversion << endl;
 	if (!p.close())
 		return false;
 	f.close();
@@ -94,8 +97,8 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
-	QString pkg_name = QDir::currentPath() + '\\' + contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
-	if (!QDir().rename(pkg_name + ".pkg", pkg_name + part_number + ".pkg"))
+	QString packagepath = QDir::currentPath() + '\\';
+	if (!QDir().rename(packagepath + packagename + ".pkg", packagepath + packagename + part_number + ".pkg"))
 		return false;
 	return true;
 }
