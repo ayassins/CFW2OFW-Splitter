@@ -38,7 +38,7 @@ bool PKG::generate_debug_package() {
 	cat = p.at(PARAM::CATEGORY);
 	if (cat.isEmpty())
 		return false;
-	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AV" || cat == "AT") {
+	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AM" || cat == "AV" || cat == "AT" || cat == "CB" || cat == "AS" || cat == "HM" || cat == "SF") {
 		app_ver = "01.00";
 		p.insert(PARAM::APP_VER, app_ver);
 		p.insert(PARAM::TARGET_APP_VER, "00.01");
@@ -56,17 +56,30 @@ bool PKG::generate_debug_package() {
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		klicensee = "0x00000000000000000000000000000000";
 		drmtype = "Free";
-		contenttype = "GameExec";
+		contenttype = "GameData";
 		packagetype = "DiscGamePatch";
 		packageversion = version;
 		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
 	}
-	else if (cat == "2G" || cat == "2P" || cat == "2D" || cat == "1P" || cat == "MN" || cat == "PE" || cat == "PP") {
+	else if (cat == "1P" || cat == "MN" || cat == "PE" || cat == "2P" || cat == "2G" || cat == "2D" || cat == "PP" || cat == "WT") {
 		app_ver = "01.00";
 		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
 		klicensee = "0x72F990788F9CFF745725F08E4C128387";
 		drmtype = "Local";
-		contenttype = "GameData";
+		if (cat == "1P")
+			contenttype = "PS1Game";
+		else if (cat == "2G" || cat == "2P" || cat == "2D")
+			contenttype = "PS2Game";
+		else if (cat == "MN")
+			contenttype = "minis";
+		else if (cat == "PE")
+			contenttype = "PSPemu";
+		else if (cat == "PP")
+			contenttype = "PSPData";
+		else if (cat == "WT")
+			contenttype = "XMBLink";
+		else
+			contenttype = "GameData";
 		packageversion = version;
 		packagename = contentid;
 	}
