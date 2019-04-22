@@ -110,8 +110,7 @@ bool PKG::generate_debug_package() {
 	QString packagepath = QDir::currentPath() + '\\';
 	if (packagename.length() == 36) {
 		outputpackagename = packagename + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
-		packagename += "-V" + version;
-		packagename.replace('.', "");
+		packagename.append("-V" + version).replace('.', "");
 	}
 	else
 		outputpackagename = packagename;
