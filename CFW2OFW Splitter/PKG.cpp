@@ -36,55 +36,58 @@ bool PKG::generate_debug_package() {
 		p.insert(PARAM::VERSION, version);
 	}
 	cat = p.at(PARAM::CATEGORY);
-	if (cat.isEmpty())
-		return false;
-	if (cat == "DG" || cat == "HD" || cat == "HG" || cat == "AP" || cat == "AM" || cat == "AV" || cat == "AT" || cat == "CB" || cat == "AS" || cat == "HM" || cat == "SF") {
-		app_ver = "01.00";
-		p.insert(PARAM::APP_VER, app_ver);
-		p.insert(PARAM::TARGET_APP_VER, "00.01");
-		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
-		klicensee = "0x00000000000000000000000000000000";
-		drmtype = "Free";
+	if (cat == "DG" || cat == "HD" || cat == "HG" ||
+		cat == "AP" || cat == "AM" || cat == "AV" ||
+		cat == "AT" || cat == "CB" || cat == "AS" ||
+		cat == "HM" || cat == "SF") {
 		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
-		packageversion = version;
-		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+		app_ver = "01.00";
+		drmtype = "Free";
 	}
 	else if (cat == "GD") {
-		app_ver = p.at(PARAM::APP_VER);
-		p.insert(PARAM::TARGET_APP_VER, "00.01");
-		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
-		klicensee = "0x00000000000000000000000000000000";
-		drmtype = "Free";
 		contenttype = "GameData";
 		packagetype = "DiscGamePatch";
-		packageversion = version;
-		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+		app_ver = p.at(PARAM::APP_VER);
+		drmtype = "Free";
 	}
-	else if (cat == "1P" || cat == "MN" || cat == "PE" || cat == "2P" || cat == "2G" || cat == "2D" || cat == "PP" || cat == "WT") {
-		app_ver = "01.00";
-		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
-		klicensee = "0x72F990788F9CFF745725F08E4C128387";
+	else if (cat == "1P") {
+		contenttype = "PS1Game";
 		drmtype = "Local";
-		if (cat == "1P")
-			contenttype = "PS1Game";
-		else if (cat == "2G" || cat == "2P" || cat == "2D")
-			contenttype = "PS2Game";
-		else if (cat == "MN")
-			contenttype = "minis";
-		else if (cat == "PE")
-			contenttype = "PSPemu";
-		else if (cat == "PP")
-			contenttype = "PSPData";
-		else if (cat == "WT")
-			contenttype = "XMBLink";
-		else
-			contenttype = "GameData";
-		packageversion = version;
-		packagename = contentid;
+	}
+	else if (cat == "2G" || cat == "2P" || cat == "2D") {
+		contenttype = "PS2Game";
+		drmtype = "Local";
+	}
+	else if (cat == "MN") {
+		contenttype = "minis";
+		drmtype = "Local";
+	}
+	else if (cat == "PE"){
+		contenttype = "PSPemu";
+		drmtype = "Local";
+	}
+	else if (cat == "PP") {
+		contenttype = "PSPData";
+		drmtype = "Local";
+	}
+	else if (cat == "WT") {
+		contenttype = "XMBLink";
+		drmtype = "Local";
 	}
 	else
 		return false;
+	if(!app_ver.isEmpty())
+		p.insert(PARAM::APP_VER, app_ver);
+	p.insert(PARAM::TARGET_APP_VER, "00.01");
+	contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
+	contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
+	klicensee = "0x00000000000000000000000000000000";			//"0x72F990788F9CFF745725F08E4C128387";
+	packageversion = version;
+	packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+	packagename = contentid;
+
+	
 	if (contentid.isEmpty())
 		return false;
 	QFile f(package_conf);
