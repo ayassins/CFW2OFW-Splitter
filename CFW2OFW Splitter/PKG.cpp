@@ -11,7 +11,7 @@ PKG::~PKG() {
 
 
 bool PKG::generate_debug_package() {
-	QByteArray title_id, part_number, version, app_ver, cat, contentid, klicensee, drmtype, contenttype, packagetype, packageversion;
+	QByteArray title_id, part_number, cat, version, app_ver, contentid, klicensee, drmtype, contenttype, packagetype, packageversion;
 	QString packagename;
 	if (path.isEmpty())
 		return false;
@@ -30,11 +30,6 @@ bool PKG::generate_debug_package() {
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())
 		return false;
-	version = p.at(PARAM::VERSION);
-	if (version.isEmpty()) {
-		version = "01.00";
-		p.insert(PARAM::VERSION, version);
-	}
 	cat = p.at(PARAM::CATEGORY);
 	if (cat == "DG" || cat == "HD" || cat == "HG" ||
 		cat == "AP" || cat == "AM" || cat == "AV" ||
@@ -42,53 +37,56 @@ bool PKG::generate_debug_package() {
 		cat == "HM" || cat == "SF") {
 		contenttype = "GameExec";
 		packagetype = "HDDGamePatch";
-		app_ver = "01.00";
 		drmtype = "Free";
+		app_ver = "01.00";
+		p.insert(PARAM::APP_VER, app_ver);
 	}
 	else if (cat == "GD") {
+		p.insert(PARAM::TARGET_APP_VER, "00.01");
 		contenttype = "GameData";
 		packagetype = "DiscGamePatch";
-		app_ver = p.at(PARAM::APP_VER);
 		drmtype = "Free";
+		app_ver = p.at(PARAM::APP_VER);
 	}
-	else if (cat == "1P") {
+	else if (cat == "1P")
 		contenttype = "PS1Game";
-		drmtype = "Local";
-	}
-	else if (cat == "2G" || cat == "2P" || cat == "2D") {
+	else if (cat == "2G" || cat == "2P" || cat == "2D")
 		contenttype = "PS2Game";
-		drmtype = "Local";
-	}
-	else if (cat == "MN") {
+	else if (cat == "MN")
 		contenttype = "minis";
-		drmtype = "Local";
-	}
-	else if (cat == "PE"){
+	else if (cat == "PE")
 		contenttype = "PSPemu";
-		drmtype = "Local";
-	}
-	else if (cat == "PP") {
+	else if (cat == "PP")
 		contenttype = "PSPData";
-		drmtype = "Local";
-	}
-	else if (cat == "WT") {
+	else if (cat == "WT")
 		contenttype = "XMBLink";
-		drmtype = "Local";
-	}
 	else
 		return false;
-	if(!app_ver.isEmpty())
-		p.insert(PARAM::APP_VER, app_ver);
 	p.insert(PARAM::TARGET_APP_VER, "00.01");
-	contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
-	contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
+	version = p.at(PARAM::VERSION);
+	if (version.isEmpty()) {
+		version = "01.00";
+		p.insert(PARAM::VERSION, version);
+	}
+	if (app_ver.isEmpty())
+		app_ver = "01.00";
+	if (drmtype.isEmpty())
+		drmtype = "Local";
 	klicensee = "0x00000000000000000000000000000000";			//"0x72F990788F9CFF745725F08E4C128387";
 	packageversion = version;
-	packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
-	packagename = contentid;
-
-	
-	if (contentid.isEmpty())
+	if (QFile::exists(path + "\\USRDIR\\EBOOT.BIN")) {
+		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
+		if (contentid.isEmpty())
+			return false;
+		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+	}
+	else if (QFile::exists(path + "\\USRDIR\\ISO.BIN.EDAT")) {
+		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
+		if (contentid.isEmpty())
+			return false;
+		packagename = contentid + "-V" + version.remove(2, 1);
+	}
+	else
 		return false;
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
