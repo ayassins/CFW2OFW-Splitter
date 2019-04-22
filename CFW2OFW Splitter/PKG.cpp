@@ -12,7 +12,7 @@ PKG::~PKG() {
 
 bool PKG::generate_debug_package() {
 	QByteArray title_id, part_number, cat, version, app_ver, contentid, klicensee, drmtype, contenttype, packagetype, packageversion;
-	QString packagename;
+	QString packagename, outputpackagename;
 	if (path.isEmpty())
 		return false;
 	if (path.endsWith('\\'))
@@ -40,13 +40,14 @@ bool PKG::generate_debug_package() {
 		drmtype = "Free";
 		app_ver = "01.00";
 		p.insert(PARAM::APP_VER, app_ver);
+		p.insert(PARAM::TARGET_APP_VER, "00.01");
 	}
 	else if (cat == "GD") {
-		p.insert(PARAM::TARGET_APP_VER, "00.01");
 		contenttype = "GameData";
 		packagetype = "DiscGamePatch";
 		drmtype = "Free";
 		app_ver = p.at(PARAM::APP_VER);
+		p.insert(PARAM::TARGET_APP_VER, "00.01");
 	}
 	else if (cat == "1P")
 		contenttype = "PS1Game";
@@ -62,7 +63,6 @@ bool PKG::generate_debug_package() {
 		contenttype = "XMBLink";
 	else
 		return false;
-	p.insert(PARAM::TARGET_APP_VER, "00.01");
 	version = p.at(PARAM::VERSION);
 	if (version.isEmpty()) {
 		version = "01.00";
@@ -76,17 +76,13 @@ bool PKG::generate_debug_package() {
 	packageversion = version;
 	if (QFile::exists(path + "\\USRDIR\\EBOOT.BIN")) {
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
-		if (contentid.isEmpty())
-			return false;
 		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
 	}
-	else if (QFile::exists(path + "\\USRDIR\\ISO.BIN.EDAT")) {
+	else {
 		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
-		if (contentid.isEmpty())
-			return false;
-		packagename = contentid + "-V" + version.remove(2, 1);
+		packagename = contentid;
 	}
-	else
+	if (contentid.isEmpty())
 		return false;
 	QFile f(package_conf);
 	if (!f.open(QIODevice::WriteOnly))
@@ -112,7 +108,14 @@ bool PKG::generate_debug_package() {
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
 	QString packagepath = QDir::currentPath() + '\\';
-	if (!QDir().rename(packagepath + packagename + ".pkg", packagepath + packagename + part_number + ".pkg"))
+	if (packagename.length() == 36) {
+		outputpackagename = packagename + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+		packagename += "-V" + version;
+		packagename.replace('.', "");
+	}
+	else
+		outputpackagename = packagename;
+	if (!QDir().rename(packagepath + packagename + ".pkg", packagepath + outputpackagename + part_number + ".pkg"))
 		return false;
 	return true;
 }
