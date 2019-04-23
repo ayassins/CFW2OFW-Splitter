@@ -103,7 +103,7 @@ bool PKG::generate_debug_package() {
 	f.close();
 	QProcess proc;
 	proc.setProcessChannelMode(QProcess::ForwardedChannels);
-	qDebug() << "Start Pkg Create" << endl;
+	qDebug() << "Generate Package : 2P0001-PS2U10000_00-0000111122223333.pkg" << endl; //Generate Package : "2P0001-PS2U10000_00-0000111122223333.pkg"
 	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << path);
 	if (!proc.waitForStarted())
 		return false;
