@@ -15,7 +15,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
   int main(int argc, char *argv[]) {
 	  qInstallMessageHandler(myMessageOutput);
 	  QCoreApplication a(argc, argv);
-	  qDebug() << " --- CFW2OFW Splitter v1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
+	  qDebug() << " --- CFW2OFW Splitter v1.1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	  if (argc < 2)
 		  qDebug() << "drag and drop directory BL?????? or BC?????? or NP?????? or SL??????";
 	  else {
