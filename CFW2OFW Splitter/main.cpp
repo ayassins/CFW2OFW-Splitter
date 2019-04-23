@@ -10,7 +10,7 @@
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
 	if (type == QtDebugMsg)
-		fprintf(stdout, "%s\n", msg.toLocal8Bit().constData());
+		fprintf(stdout, "%s", msg.toLocal8Bit().constData());
 }
   int main(int argc, char *argv[]) {
 	  qInstallMessageHandler(myMessageOutput);

@@ -92,9 +92,10 @@ bool PKG::generate_debug_package() {
 		<< "Klicensee = " << klicensee << endl
 		<< "DRMType = " << drmtype << endl
 		<< "InstallDirectory = " << titleid << endl
-		<< "ContentType = " << contenttype << endl
-		<< "PackageType = " << pkgtype << endl
-		<< "PackageVersion = " << pkgver << endl;
+		<< "PackageVersion = " << pkgver << endl
+		<< "ContentType = " << contenttype << endl;
+	if (!pkgtype.isEmpty())
+		out << "PackageType = " << pkgtype << endl;
 	if (!p.close())
 		return false;
 	f.close();
