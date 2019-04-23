@@ -103,7 +103,7 @@ bool PKG::generate_debug_package() {
 	f.close();
 	QProcess proc;
 	proc.setProcessChannelMode(QProcess::ForwardedChannels);
-	qDebug() << endl << "Generate Package : \"" << npkgname.replace('.', "") + partnum + ".pkg" << "\"" << endl;
+	qDebug() << endl << "Generate Package :" << npkgname.replace('.', "") + partnum + ".pkg" << endl;
 	proc.start(psn_package_npdrm, QStringList() << "-n" << "-f" << package_conf << path);
 	if (!proc.waitForStarted())
 		return false;
