@@ -77,10 +77,12 @@ bool PKG::generate_debug_package() {
 	if (QFile::exists(path + "\\USRDIR\\EBOOT.BIN")) {
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
 		pkgname = contentid + "-A" + app_ver + "-V" + version;
+		npkgname = pkgname;
 	}
 	else {
 		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
 		pkgname = contentid;
+		npkgname = pkgname + "-A" + app_ver + "-V" + version;
 	}
 	if (contentid.isEmpty())
 		return false;
@@ -109,12 +111,6 @@ bool PKG::generate_debug_package() {
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
 	QString pkgpath = QDir::currentPath() + '\\';
-	if (pkgname.length() == 36) {
-		npkgname = pkgname += "-V" + version;
-		npkgname.insert(36, "-A" + app_ver);
-	}
-	else
-		npkgname = pkgname;
 	if (!QDir().rename(pkgpath + pkgname.replace('.', "") + ".pkg", pkgpath + npkgname.replace('.', "") + partnum + ".pkg"))
 		return false;
 	return true;
