@@ -17,7 +17,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 	  QCoreApplication a(argc, argv);
 	  qDebug() << " --- CFW2OFW Splitter v1.1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	  if (argc < 2)
-		  qDebug() << "drag and drop directory BL?????? or BC?????? or NP?????? or SL??????";
+		  qDebug() << "drag and drop directory BL?????? or BC?????? or NP?????? or SL??????" << endl;
 	  else {
 		  QStringList gamespaths;
 		  gamespaths << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
@@ -26,7 +26,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 				  if (!PKG(path).generate_debug_package())
 					  qDebug() << "couldn't generate Package for [ " << path << " ]" << endl;
 				  else
-					  qDebug() << "couldn't split game directory!.";
+					  qDebug() << "couldn't split game directory!." << endl;
 	  }
 	  qDebug() << " Press any key to continue . . ."; getchar();
 	  return false;
