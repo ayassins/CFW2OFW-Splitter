@@ -11,21 +11,21 @@ PKG::~PKG() {
 
 
 bool PKG::generate_debug_package() {
-	QByteArray title_id, part_number, cat, version, app_ver, contentid, klicensee, drmtype, contenttype, packagetype, packageversion;
-	QString packagename, outputpackagename;
+	QByteArray titleid, partnum, cat, version, app_ver, contentid, klicensee, drmtype, contenttype, pkgtype, pkgver;
+	QString pkgname, npkgname;
 	if (path.isEmpty())
 		return false;
 	if (path.endsWith('\\'))
 		path.remove(path.size() - 1, 1);
-	title_id = path.mid(1 + path.lastIndexOf('\\')).toLocal8Bit();
-	if (!title_id.startsWith("BL"))
-		if (!title_id.startsWith("BC"))
-			if (!title_id.startsWith("NP"))
-				if (!title_id.startsWith("SL"))
+	titleid = path.mid(1 + path.lastIndexOf('\\')).toLocal8Bit();
+	if (!titleid.startsWith("BL"))
+		if (!titleid.startsWith("BC"))
+			if (!titleid.startsWith("NP"))
+				if (!titleid.startsWith("SL"))
 					return false;
-	if (title_id.contains('_')) {
-		title_id = title_id.left(title_id.lastIndexOf('_'));
-		part_number = ".part" + title_id.mid(1 + title_id.lastIndexOf('_'));
+	if (titleid.contains('_')) {
+		titleid = titleid.left(titleid.lastIndexOf('_'));
+		partnum = ".part" + titleid.mid(1 + titleid.lastIndexOf('_'));
 	}
 	PARAM p(path + "\\PARAM.SFO");
 	if (!p.isparam())
@@ -36,7 +36,7 @@ bool PKG::generate_debug_package() {
 		cat == "AT" || cat == "CB" || cat == "AS" ||
 		cat == "HM" || cat == "SF") {
 		contenttype = "GameExec";
-		packagetype = "HDDGamePatch";
+		pkgtype = "HDDGamePatch";
 		drmtype = "Free";
 		app_ver = "01.00";
 		p.insert(PARAM::APP_VER, app_ver);
@@ -44,7 +44,7 @@ bool PKG::generate_debug_package() {
 	}
 	else if (cat == "GD") {
 		contenttype = "GameData";
-		packagetype = "DiscGamePatch";
+		pkgtype = "DiscGamePatch";
 		drmtype = "Free";
 		app_ver = p.at(PARAM::APP_VER);
 		p.insert(PARAM::TARGET_APP_VER, "00.01");
@@ -73,14 +73,14 @@ bool PKG::generate_debug_package() {
 	if (drmtype.isEmpty())
 		drmtype = "Local";
 	klicensee = "0x00000000000000000000000000000000";			//"0x72F990788F9CFF745725F08E4C128387";
-	packageversion = version;
+	pkgver = version;
 	if (QFile::exists(path + "\\USRDIR\\EBOOT.BIN")) {
 		contentid = EBOOT(path + "\\USRDIR\\EBOOT.BIN").contentid();
-		packagename = contentid + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
+		pkgname = contentid + "-A" + app_ver + "-V" + version;
 	}
 	else {
 		contentid = EDAT(path + "\\USRDIR\\ISO.BIN.EDAT").contentid();
-		packagename = contentid;
+		pkgname = contentid;
 	}
 	if (contentid.isEmpty())
 		return false;
@@ -91,10 +91,10 @@ bool PKG::generate_debug_package() {
 	out << "ContentID = " << contentid << endl
 		<< "Klicensee = " << klicensee << endl
 		<< "DRMType = " << drmtype << endl
-		<< "InstallDirectory = " << title_id << endl
+		<< "InstallDirectory = " << titleid << endl
 		<< "ContentType = " << contenttype << endl
-		<< "PackageType = " << packagetype << endl
-		<< "PackageVersion = " << packageversion << endl;
+		<< "PackageType = " << pkgtype << endl
+		<< "PackageVersion = " << pkgver << endl;
 	if (!p.close())
 		return false;
 	f.close();
@@ -107,14 +107,14 @@ bool PKG::generate_debug_package() {
 		return false;
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
-	QString packagepath = QDir::currentPath() + '\\';
-	if (packagename.length() == 36) {
-		outputpackagename = packagename + "-A" + app_ver.remove(2, 1) + "-V" + version.remove(2, 1);
-		packagename.append("-V" + version).replace('.', "");
+	QString pkgpath = QDir::currentPath() + '\\';
+	if (pkgname.length() == 36) {
+		npkgname = pkgname += "-V" + version;
+		npkgname.insert(36, "-A" + app_ver);
 	}
 	else
-		outputpackagename = packagename;
-	if (!QDir().rename(packagepath + packagename + ".pkg", packagepath + outputpackagename + part_number + ".pkg"))
+		npkgname = pkgname;
+	if (!QDir().rename(pkgpath + pkgname.replace('.', "") + ".pkg", pkgpath + npkgname.replace('.', "") + partnum + ".pkg"))
 		return false;
 	return true;
 }
