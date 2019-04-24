@@ -112,7 +112,8 @@ bool PKG::generate_debug_package() {
 	if (proc.exitCode() != QProcess::NormalExit && proc.exitStatus() != QProcess::NormalExit)
 		return false;
 	QString pkgpath = QDir::currentPath() + '\\';
-	if (!QDir().rename(pkgpath + pkgname.replace('.', "") + ".pkg", pkgpath + npkgname.replace('.', "") + partnum + ".pkg"))
-		return false;
+	if (!QFile::exists(pkgpath + npkgname.replace('.', "") + partnum + ".pkg"))
+		if (!QDir().rename(pkgpath + pkgname.replace('.', "") + ".pkg", pkgpath + npkgname.replace('.', "") + partnum + ".pkg"))
+			return false;
 	return true;
 }
