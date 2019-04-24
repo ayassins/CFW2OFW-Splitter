@@ -19,14 +19,15 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 	  if (argc < 2)
 		  qDebug() << "drag and drop directory BL?????? or BC?????? or NP?????? or SL??????" << endl;
 	  else {
-		  QStringList gamespaths;
-		  gamespaths << DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
-		  if (!gamespaths.isEmpty())
+		  QStringList gamespaths = DIRSPLIT(argv[1], QStringList() << "PARAM.SFO" << "ICON0.PNG" << "USRDIR\\EBOOT.BIN", 4294705152).split();
+		  if (!gamespaths.isEmpty()) {
 			  for each (QString path in gamespaths)
 				  if (!PKG(path).generate_debug_package())
 					  qDebug() << "couldn't generate Package for [ " << path << " ]" << endl;
-				  else
-					  qDebug() << "couldn't split game directory!." << endl;
+		  }
+		  else
+			  if (!PKG(argv[1]).generate_debug_package())
+				  qDebug() << "couldn't generate Package for [ " << argv[1] << " ]" << endl;
 	  }
 	  qDebug() << " Press any key to continue . . ."; getchar();
 	  return false;
