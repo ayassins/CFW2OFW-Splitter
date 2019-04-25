@@ -15,8 +15,10 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 int main(int argc, char *argv[]) {
 	qInstallMessageHandler(myMessageOutput);
 	QCoreApplication a(argc, argv);
-	qDebug() << " --- CFW2OFW Splitter v1.1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	QStringList argvdirs = a.arguments();
+	if ((argvdirs[0].mid(1 + argvdirs[0].lastIndexOf(QDir::separator())) != "CFW2OFW_Splitter_v1.1.exe"))
+		return false;
+	qDebug() << " --- CFW2OFW Splitter v1.1 ---" << endl << "  -- a.yassin@msn.com --" << endl;
 	if (argvdirs.length() < 2)
 		qDebug() << "drag and drop directory BL?????? or BC?????? or NP?????? or SL??????" << endl;
 	else {
